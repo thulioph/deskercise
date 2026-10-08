@@ -6,6 +6,19 @@ Short workplace movement breaks for people who work at a computer. A foreground 
 
 Requires **Node.js 22.13+**; Node 24 is recommended. macOS is the initial target platform.
 
+### Install from npm
+
+After the maintainer completes the [npm publishing setup](docs/npm-publishing.md), install the latest public package or select an available version:
+
+```bash
+npm install --global @thulioph/deskercise
+# Example: replace 0.1.7 with an available npm version.
+npm install --global @thulioph/deskercise@0.1.7
+deskercise --version
+```
+
+The command remains `deskercise`. The npm package is public and does not require access to the private GitHub repository. Installing another version preserves local history.
+
 ### Install a release
 
 Open [GitHub Releases](https://github.com/thulioph/deskercise/releases), choose a version, and download its `deskercise-<version>.tgz` and `SHA256SUMS` assets into the same directory. Releases inherit the repository's visibility: this private repository requires GitHub access to download them.
@@ -122,11 +135,13 @@ npm run dev -- start --demo --once
 
 ## Automated releases
 
-Each push to `main` (including a merged PR) runs the `Tests` and `Build` jobs on macOS. The build job also installs the packed app in a temporary directory and checks its version, CLI commands, native SQLite, and offline report. Only after both jobs succeed does the `Release` job package the exact validated commit and publish a GitHub Release with a `.tgz`, SHA-256 checksum, and generated change notes. PRs and manual CI runs do not publish releases.
+Each push to `main` (including a merged PR) runs the `Tests` and `Build` jobs on macOS. The build job also installs the packed app in a temporary directory, checks its version, CLI commands, native SQLite, and offline report, and runs an npm publication dry run. Only after both jobs succeed does the `Release` job package the exact validated commit, publish a GitHub Release with a `.tgz`, SHA-256 checksum, and generated change notes, and publish that same verified `.tgz` to npm through Trusted Publishing. PRs and manual CI runs do not publish releases or npm packages.
 
 Release versions use the base major/minor version from `package.json` and its patch plus the CI workflow run number. For example, base `0.1.0` and CI run `7` produce `v0.1.7`. PR checks also consume run numbers, so gaps are expected. Concurrent main pushes retain their own runs and versions. Retrying a run uses the same version, leaves a published release intact, and can resume a draft after an upload failure.
 
-The version is applied to the package in CI, without committing a version bump back to `main`. Release packages include an npm shrinkwrap to pin dependency versions. Git tags identify the original validated source commit, and `deskercise --version` reports the installed package version. Keep the CI workflow identity and version base stable within a release line; change the base major/minor version when starting a new line. The workflow uses GitHub's built-in token and needs no npm publishing credentials.
+The version is applied to the package in CI, without committing a version bump back to `main`. Release packages include an npm shrinkwrap to pin dependency versions. Git tags identify the original validated source commit, and `deskercise --version` reports the installed package version. Keep the CI workflow identity and version base stable within a release line; change the base major/minor version when starting a new line. GitHub release assets keep their `deskercise-<version>.tgz` filename even though the npm package is scoped.
+
+The release job uses GitHub's built-in token for GitHub Releases and OIDC for npm; there is no `NPM_TOKEN` secret. Complete the [one-time npm setup](docs/npm-publishing.md) before merging the publishing change. Release jobs are queued, and older versions published later use the `previous` npm tag so they cannot replace a newer `latest`. Retrying an already-published npm version skips it only if the registry integrity matches the verified tarball. Registry errors or conflicting contents fail the job. If npm fails after the GitHub Release succeeds, rerun the failed Release job.
 
 ## First test on macOS
 
