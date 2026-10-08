@@ -122,11 +122,13 @@ npm run dev -- start --demo --once
 
 ## Automated releases
 
-Each push to `main` (including a merged PR) runs the `Tests` and `Build` jobs on macOS. The build job also installs the packed app in a temporary directory and checks its version, CLI commands, native SQLite, and offline report. Only after both jobs succeed does the `Release` job package the exact validated commit and publish a GitHub Release with a `.tgz`, SHA-256 checksum, and generated change notes. PRs and manual CI runs do not publish releases.
+Every PR and push to `main` runs **Commit messages**, **Tests**, and **Build**. Commitlint checks every new commit, and Husky checks messages locally after `npm ci`. Use Conventional Commits and **Rebase and merge**; see [CONTRIBUTING.md](CONTRIBUTING.md) for examples, correcting messages, and repository setup. No branch protection is configured, so passing checks remain a contributor responsibility.
 
-Release versions use the base major/minor version from `package.json` and its patch plus the CI workflow run number. For example, base `0.1.0` and CI run `7` produce `v0.1.7`. PR checks also consume run numbers, so gaps are expected. Concurrent main pushes retain their own runs and versions. Retrying a run uses the same version, leaves a published release intact, and can resume a draft after an upload failure.
+After all three checks pass on a push to `main`, Semantic Release determines the next version from commits since the latest `v<version>` tag: `fix`/`perf` produce a patch, `feat` a minor, and breaking changes a major. Documentation or maintenance alone does not produce a release. Existing tags such as `v0.1.4` are preserved; CI run numbers no longer determine versions.
 
-The version is applied to the package in CI, without committing a version bump back to `main`. Release packages include an npm shrinkwrap to pin dependency versions. Git tags identify the original validated source commit, and `deskercise --version` reports the installed package version. Keep the CI workflow identity and version base stable within a release line; change the base major/minor version when starting a new line. The workflow uses GitHub's built-in token and needs no npm publishing credentials.
+For a releasable change, the exact validated commit is rebuilt and packaged with an npm shrinkwrap. The package is installed and verified before publishing a GitHub Release with `deskercise-<version>.tgz`, `SHA256SUMS`, and an automatically generated `CHANGELOG.md`. Release notes contain the same changelog. Version changes are applied only in CI; no version-bump commit is pushed to `main`. Release jobs are serialized and failed publication can resume the same tagged version on a rerun. PRs and manual CI runs never publish.
+
+This change publishes GitHub Releases. Integration with the separate npm Trusted Publishing PR is documented in [CONTRIBUTING.md](CONTRIBUTING.md#integrating-npm-publishing-pr-3), with one semantic version shared by both destinations.
 
 ## First test on macOS
 

@@ -10,12 +10,39 @@ on:
 permissions:
   contents: read
 
+env:
+  HUSKY: '0'
+
 concurrency:
   # Replace outdated PR checks, but let every main push finish and release.
   group: ci-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  commits:
+    name: Commit messages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out full commit history
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install validation dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Validate every new commit
+        run: npm run lint:commits
+        env:
+          FROM_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          TO_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
   tests:
     name: Tests
     runs-on: macos-latest
@@ -34,6 +61,8 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm test
+      - name: Check TypeScript
+        run: npm run check
 
   build:
     name: Build
@@ -58,23 +87,30 @@ jobs:
 
   release:
     name: Release
-    needs: [tests, build]
+    needs: [commits, tests, build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: macos-latest
     timeout-minutes: 15
+    concurrency:
+      group: deskercise-releases
+      cancel-in-progress: false
+      queue: max
     permissions:
       contents: write
     env:
       GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      CI_RUN_NUMBER: ${{ github.run_number }}
       RELEASE_COMMIT: ${{ github.sha }}
     steps:
       - name: Check out validated commit
         uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 0
           persist-credentials: false
+      - name: Restore main branch at the validated commit
+        run: git checkout -B main "$RELEASE_COMMIT"
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
@@ -82,21 +118,6 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Assign release version
-        run: |
-          version=$(node scripts/release-version.mjs)
-          npm version "$version" --no-git-tag-version
-          echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
-      - name: Build
-        run: npm run build
-      - name: Package and verify installation
-        run: |
-          npm shrinkwrap
-          npm run test:package
-        env:
-          PACKAGE_DIRECTORY: release
-      - name: Generate checksum
-        working-directory: release
-        run: shasum -a 256 "deskercise-$RELEASE_VERSION.tgz" > SHA256SUMS
-      - name: Publish GitHub release
-        run: bash scripts/publish-release.sh
+      - name: Publish semantic release
+        run: npm run release
+
