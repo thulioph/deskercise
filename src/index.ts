@@ -2,6 +2,7 @@
 import { Command } from 'commander';
 import { intro, text, outro, isCancel } from '@clack/prompts';
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { StartTimer } from './core/StartTimer.js';
 import { getReport } from './core/GetReport.js';
@@ -12,7 +13,8 @@ import { MacNotifier } from './infrastructure/Notifier.js';
 import { dataRoot, ensureDirectory, readConfig, writeConfig, validInterval } from './infrastructure/config.js';
 import { writeReport, terminalReport, openReport } from './infrastructure/report.js';
 import { Terminal } from './presentation/Terminal.js';
-const program = new Command().name('deskercise').version('0.1.0').description('Private, local workplace movement breaks. macOS prototype.');
+const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string };
+const program = new Command().name('deskercise').version(version).description('Private, local workplace movement breaks. macOS prototype.');
 program.command('start').description('Run the foreground movement timer')
   .option('-i, --interval <minutes>', 'Override the saved interval for this run', validInterval)
   .option('--demo', 'Test with a 3-second interval and 5-second timer, in a separate data folder')
