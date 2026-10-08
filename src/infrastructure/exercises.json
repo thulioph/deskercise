@@ -1,0 +1,272 @@
+[
+  {
+    "id": "neck-turn",
+    "name": "Gentle neck turns",
+    "bodyPart": "neck",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Sit upright.",
+      "Look gently left, then right; return to centre.",
+      "Move comfortably; rest between turns."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "neck-tilt",
+    "name": "Gentle neck tilts",
+    "bodyPart": "neck",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Sit comfortably.",
+      "Tilt your head gently to either side.",
+      "Return to centre between movements."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "shoulder-rolls",
+    "name": "Shoulder rolls",
+    "bodyPart": "shoulders",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Relax your shoulders.",
+      "Roll forward three times, then backward three times.",
+      "Pause and relax."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "finger-open",
+    "name": "Hand opening",
+    "bodyPart": "hands",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Make gentle fists.",
+      "Open and spread your fingers three times.",
+      "Relax both hands."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "wrist-up-down",
+    "name": "Wrist mobility",
+    "bodyPart": "wrists",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Relax your hands.",
+      "Bend both wrists up and down three times.",
+      "Rest in a neutral position."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "elbow-bend",
+    "name": "Elbow mobility",
+    "bodyPart": "arms",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Relax your arms.",
+      "Bend and straighten both elbows three times.",
+      "Pause without forcing straightening."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "seated-back",
+    "name": "Seated back movement",
+    "bodyPart": "back",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Sit comfortably.",
+      "Round your back gently, then sit tall.",
+      "Repeat three times; relax."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "NHS · 1 minute body check",
+      "url": "https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "shrug",
+    "name": "Shoulder release",
+    "bodyPart": "shoulders",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Raise shoulders gently toward ears.",
+      "Hold 3–5 seconds; release.",
+      "Repeat twice or three times."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "CCOHS · Workstation stretching",
+      "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "wrist-side",
+    "name": "Side-to-side wrist movement",
+    "bodyPart": "wrists",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Face open palms downward.",
+      "Move wrists gently side to side.",
+      "Hold 3–5 seconds; repeat three times."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "CCOHS · Workstation stretching",
+      "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "forearm-turn",
+    "name": "Forearm rotation",
+    "bodyPart": "arms",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Extend arms comfortably.",
+      "Rotate palms down, then up.",
+      "Hold 3–5 seconds each; repeat three times."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "CCOHS · Workstation stretching",
+      "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "ankle-flex",
+    "name": "Ankle flex and point",
+    "bodyPart": "legs",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Extend one leg comfortably.",
+      "Alternate pointing toes upward and downward.",
+      "Change legs."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "CCOHS · Workstation stretching",
+      "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "leg-lift",
+    "name": "Seated leg lift",
+    "bodyPart": "legs",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Sit forward, feet grounded.",
+      "Straighten one leg; lift it slightly and lower.",
+      "Alternate legs."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "CCOHS · Workstation stretching",
+      "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "cross-body",
+    "name": "Cross-body shoulder stretch",
+    "bodyPart": "shoulders",
+    "durationSeconds": 60,
+    "position": "either",
+    "instructions": [
+      "Support an arm above its elbow.",
+      "Guide it gently across your chest.",
+      "Hold 5 seconds; switch arms."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "CCOHS · Workstation stretching",
+      "url": "https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "chest-open",
+    "name": "Chest opening",
+    "bodyPart": "chest",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Sit forward in a stable chair.",
+      "Open arms sideways, thumbs upward; gently draw shoulder blades together.",
+      "Hold 20 seconds, relax; repeat within the break."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "Mersey Care NHS · Desk-based jobs",
+      "url": "https://www.merseycare.nhs.uk/msk-work/desk-based-jobs",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  },
+  {
+    "id": "hamstring",
+    "name": "Seated hamstring stretch",
+    "bodyPart": "legs",
+    "durationSeconds": 60,
+    "position": "seated",
+    "instructions": [
+      "Sit near the front of a stable chair.",
+      "Extend one leg, heel grounded and toes upward; hinge forward gently at the hips.",
+      "Hold 20 seconds; release and change legs."
+    ],
+    "caution": "Stop if painful, dizzy or tingling. Stay within a comfortable range.",
+    "source": {
+      "title": "Mersey Care NHS · Desk-based jobs",
+      "url": "https://www.merseycare.nhs.uk/msk-work/desk-based-jobs",
+      "adaptation": "Rest during remaining time; shortened routine."
+    }
+  }
+]
