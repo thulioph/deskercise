@@ -1,10 +1,10 @@
 # Deskercise — macOS prototype
 
-Pausas curtas de ginástica laboral para quem trabalha no computador. CLI em foreground, exercícios com referências oficiais, histórico SQLite e relatório HTML offline. Sem conta, telemetria ou backend.
+Short workplace movement breaks for people who work at a computer. A foreground CLI with exercises based on official references, a local SQLite history, and an offline HTML report. No accounts, telemetry, or backend.
 
-## Comece aqui
+## Getting started
 
-Requisito: **Node.js 22.13+**; Node 24 também funciona. Este projeto tem macOS como plataforma inicial. Clone o repositório e entre na pasta do projeto:
+Requires **Node.js 22.13+**; Node 24 also works. macOS is the initial target platform. Clone the repository and enter the project directory:
 
 ```bash
 git clone https://github.com/thulioph/deskercise.git
@@ -15,40 +15,40 @@ npm run build
 npm link
 ```
 
-Teste rápido, com intervalo de 3 segundos e timer de 5 segundos:
+Run a quick test with a 3-second interval and a 5-second timer:
 
 ```bash
 deskercise start --demo --once
 deskercise report --demo
 ```
 
-Quando o exercício aparecer, pressione **1** para iniciar e, ao final, **y** para confirmar. O comando `report` imprime o resumo e abre o HTML no navegador padrão. O modo demo serve para testar a interface; não é uma prescrição de exercício em 5 segundos. Seus dados ficam separados do histórico normal.
+When the exercise appears, press **1** to start and **y** to confirm completion when the timer ends. The `report` command prints a summary and opens the HTML report in your default browser. Demo mode tests the interface; it is not a recommended 5-second exercise routine. Demo data is kept separate from your regular history.
 
-Sem instalar o comando globalmente, use `node dist/index.js` no lugar de `deskercise`:
+To run without installing the command globally, use `node dist/index.js` instead of `deskercise`:
 
 ```bash
 node dist/index.js start --demo --once
 node dist/index.js report --demo
 ```
 
-## Uso normal
+## Everyday use
 
 ```bash
 deskercise start
 ```
 
-Na primeira execução, escolha um intervalo (padrão sugerido: 45 minutos). Mantenha o terminal aberto. Cada pausa oferece:
+On your first run, choose an interval between breaks (suggested default: 45 minutes). Keep the terminal open. Each break offers:
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| `1` | Iniciar o timer de 60 segundos |
-| `2` | Pular este exercício |
-| `3` | Adiar o mesmo exercício por 10 minutos |
-| `s` | Interromper um exercício em andamento |
-| `y` / `n` | Confirmar / negar conclusão após o timer |
-| `q` / `Ctrl+C` | Encerrar e salvar a sessão |
+| `1` | Start the 60-second timer |
+| `2` | Skip this exercise |
+| `3` | Snooze the same exercise for 10 minutes |
+| `s` | Stop an exercise early |
+| `y` / `n` | Confirm / deny completion after the timer |
+| `q` / `Ctrl+C` | End and save the session |
 
-O próximo intervalo começa após resolver o exercício. Um prompt sem resposta expira após 5 minutos. A confirmação final também expira após 5 minutos; isso registra `UNCONFIRMED`, sem contar minutos concluídos.
+The next interval starts after the exercise is resolved. An unanswered prompt expires after 5 minutes. The final confirmation also expires after 5 minutes; this records `UNCONFIRMED` and adds no completed minutes.
 
 ```bash
 deskercise start --interval 1 --once
@@ -57,19 +57,19 @@ deskercise report
 deskercise report --no-open
 ```
 
-`--interval` usa minutos e substitui a preferência somente nesta execução. Se ainda não existir configuração, o valor informado vira a preferência inicial. Para mudar a preferência persistida, edite `intervalMinutes` em `~/.deskercise/config.json`.
+`--interval` is measured in minutes and overrides your preference for the current run only. If no configuration exists yet, the supplied value becomes your initial preference. To change the saved preference, edit `intervalMinutes` in `~/.deskercise/config.json`.
 
-## Exercícios e referências
+## Exercises and references
 
-O catálogo inicial contém **15 movimentos de ginástica laboral** para pescoço, ombros, mãos, punhos, braços, costas, peitoral e pernas. Cada entrada tem passos, posição, cuidado e URL da fonte. Não há rotinas de treino esportivo.
+The initial catalog contains **15 workplace movement exercises** for the neck, shoulders, hands, wrists, arms, back, chest, and legs. Each entry includes instructions, position, precautions, and a source URL. It does not include sports training routines.
 
 - [Newcastle Hospitals NHS — 1 minute body check](https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/)
 - [CCOHS — Stretching at the workstation](https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html)
 - [Mersey Care NHS — Desk-based jobs](https://www.merseycare.nhs.uk/msk-work/desk-based-jobs)
 
-As instruções são adaptações resumidas, com repetições ou tempos próprios. **Os 60 segundos são a janela da pausa, incluindo descanso; não sustente um alongamento por todo o timer.** Os valores 45 minutos e 60 segundos são escolhas do produto, não uma recomendação universal dessas entidades. Interrompa movimentos dolorosos. O app registra hábitos declarados e não diagnostica nem garante prevenção de lesões.
+Instructions are shortened adaptations with their own repetition counts or hold times. **The 60 seconds are a break window, including rest; do not hold a stretch for the entire timer.** The 45-minute interval and 60-second window are product choices, not universal recommendations from these organizations. Stop any movement that causes pain. The app logs self-reported habits; it does not diagnose conditions or guarantee injury prevention.
 
-## Dados e relatório
+## Data and reporting
 
 ```text
 ~/.deskercise/config.json
@@ -79,20 +79,20 @@ As instruções são adaptações resumidas, com repetições ou tempos próprio
 ~/.deskercise/demo/report.html
 ```
 
-`DESKERCISE_HOME` pode apontar para outra pasta. Não há requisições de rede durante o uso ou no relatório; a instalação inicial baixa dependências do npm. Chart.js, estilos e dados são incorporados no HTML, que abre via `file://` sem servidor. Não usa CDN, fontes remotas ou analytics.
+Set `DESKERCISE_HOME` to use a different directory. There are no network requests during app use or when viewing reports; the initial installation downloads dependencies from npm. Chart.js, styles, and data are embedded in the HTML, which opens through `file://` without a server. There are no CDNs, remote fonts, or analytics.
 
-O período inclui **hoje e os seis dias anteriores no fuso local atual**. As atividades são atribuídas ao dia do primeiro prompt. Minutos contam a duração do timer somente para exercícios confirmados como concluídos. Eventos interrompidos guardam os segundos de timer, mas não entram nos minutos confirmados. Snoozes ficam no histórico de ações, preservando um único exercício no denominador da taxa de conclusão. Exercícios pendentes também entram nesse denominador.
+The reporting period includes **today and the previous six days in your current local timezone**. Activities are assigned to the date of their first prompt. Minutes count timer duration only for exercises confirmed as completed. Interrupted events retain their timer seconds but do not contribute to confirmed minutes. Snooze actions remain in the action history while preserving one exercise in the completion-rate denominator. Pending exercises also count toward that denominator.
 
-Um exemplo gerado no teste está em `docs/demo-report.html`; abra esse arquivo no navegador para ver o relatório antes de instalar.
+A report generated during testing is available at `docs/demo-report.html`; open it in your browser to preview the report before installing.
 
-## Estrutura
+## Project structure
 
-- `src/core`: entidades, portas, timer e agregação de relatório; sem imports de Node, React, SQLite ou terminal.
-- `src/infrastructure`: relógio cancelável, catálogo JSON, SQLite, configuração, notificações e geração HTML.
-- `src/presentation`: interface Ink; Clack controla somente o onboarding antes de montar Ink.
-- `src/index.ts`: comandos Commander e composição das dependências.
-- `test`: testes de regras do timer, persistência, catálogo, configuração e relatório.
-- `docs/decisions.md`: decisões, limitações e roteiro de teste no Mac.
+- `src/core`: entities, ports, timer orchestration, and report aggregation; no imports from Node, React, SQLite, or the terminal.
+- `src/infrastructure`: cancellable clock, JSON catalog, SQLite, configuration, notifications, and HTML generation.
+- `src/presentation`: Ink interface; Clack handles onboarding before Ink is mounted.
+- `src/index.ts`: Commander commands and dependency composition.
+- `test`: tests for timer behavior, persistence, catalog, configuration, and reports.
+- `docs/decisions.md`: decisions, limitations, and the Mac testing checklist.
 
 ```bash
 npm test
@@ -101,19 +101,19 @@ npm run build
 npm run dev -- start --demo --once
 ```
 
-## Primeiro teste no macOS
+## First test on macOS
 
-O core, SQLite e fluxo da CLI foram verificados neste ambiente Linux; **a notificação nativa e o comando macOS `open` ainda precisam do teste real no Mac**. Nenhuma compatibilidade macOS nativa foi presumida como validada.
+The core, SQLite, and CLI flow were verified in a Linux environment; **native notifications and the macOS `open` command still require testing on a real Mac**. Native macOS compatibility has not been assumed to be verified.
 
-1. Rode `deskercise start --demo --once` e confirme a chegada da notificação.
-2. Volte ao terminal, pressione `1`, aguarde o timer e confirme com `y`.
-3. Rode `deskercise report --demo`: confira 1 conclusão e a abertura do HTML.
-4. Rode novamente; use `3` para adiar e confirme que o mesmo exercício volta após 5 segundos na demo. Use `2` para pular.
-5. Encerre uma execução com `Ctrl+C` e consulte o relatório novamente.
-6. Rode `deskercise start --interval 1 --once` para testar uma pausa real de 60 segundos.
+1. Run `deskercise start --demo --once` and confirm that the notification appears.
+2. Return to the terminal, press `1`, wait for the timer, and confirm with `y`.
+3. Run `deskercise report --demo`: check for one completion and verify that the HTML opens.
+4. Run it again; press `3` to snooze and confirm that the same exercise returns after 5 seconds in demo mode. Press `2` to skip.
+5. End a run with `Ctrl+C` and check the report again.
+6. Run `deskercise start --interval 1 --once` to test a real 60-second movement break.
 
-Se a notificação não aparecer, confira permissões de notificação e o modo Foco do macOS. O protótipo usa `node-notifier` / `terminal-notifier`; a apresentação depende da versão do sistema. O fluxo do terminal continua funcionando quando o envio falha. Se o navegador não abrir automaticamente, abra o caminho de `report.html` exibido no terminal.
+If notifications do not appear, check macOS notification permissions and Focus settings. The prototype uses `node-notifier` / `terminal-notifier`; presentation depends on the operating system version. The terminal flow continues working if notification delivery fails. If the browser does not open automatically, open the `report.html` path printed in the terminal.
 
-Se `better-sqlite3` precisar compilar e a instalação falhar, instale as ferramentas de linha de comando do Xcode (`xcode-select --install`) e tente `npm ci` novamente. Os binários de dependências são instalados no seu Mac; o ZIP não contém módulos nativos compilados em Linux.
+If `better-sqlite3` needs to compile and installation fails, install the Xcode command line tools (`xcode-select --install`) and try `npm ci` again. Native dependency binaries are installed on your Mac; the source package does not include modules compiled on Linux.
 
-Para remover o comando global: `npm unlink -g deskercise`. O histórico permanece na pasta local até você decidir removê-lo.
+To remove the global command, run `npm unlink -g deskercise`. Your history remains in the local data directory until you choose to remove it.
