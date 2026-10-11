@@ -112,25 +112,16 @@ wrapper resumes the tagged version at that exact commit, rebuilds its package,
 and resumes its draft. A completed GitHub release is left intact. Errors while
 looking up a release fail the run rather than being treated as an absent release.
 
-## Integrating npm publishing (PR #3)
+## npm publishing
 
-This PR publishes GitHub Releases only. PR #3 introduces the public scoped npm
-package and Trusted Publishing. When combining them:
+GitHub Releases and npm Trusted Publishing share one Semantic Release flow.
+`release.config.mjs` enables `npmPublish`, so the local plugin publishes the same
+verified `deskercise-<version>.tgz` to both destinations. The Release job keeps
+`id-token: write` and an OIDC-capable npm setup; the trusted publisher must
+target **ci.yml**. Complete the [one-time npm setup](docs/npm-publishing.md)
+before the first automated publish, bootstrap with a version below the next
+semantic release, and rely on Semantic Release rather than CI run numbers.
 
-1. Keep this PR's commit validation and Semantic Release flow in `ci.yml`.
-   Remove the old `Assign release version` step and any extra publication step
-   outside Semantic Release, so a no-release result cannot publish a package.
-2. Keep PR #3's scoped manifest, npm setup guide, `publish-npm.mjs`, tests, npm
-   dry-run build check, Release-job `id-token: write`, and OIDC-capable npm setup.
-   The trusted publisher must still target **ci.yml**.
-3. Set the local plugin's `npmPublish` option to `true` in `release.config.mjs`.
-   It passes the single semantic version and validated commit to both publishers;
-   npm receives the same verified tarball as GitHub.
-4. Complete npm's account-side setup before enabling publication. Bootstrap with
-   a version below the next semantic release, and replace the run-number wording
-   in `docs/npm-publishing.md` with the rules above.
-
-The tarball helper already preserves `deskercise-<version>.tgz` when the package
-name is scoped. PR #3's integrity checks and retry handling remain in its npm
-publisher. With npm enabled, a rerun also resumes npm after a completed GitHub
-release. Do not merge the two competing workflow versions without resolving them.
+The tarball helper preserves `deskercise-<version>.tgz` when the package name is
+scoped. npm integrity checks and retry handling live in `publish-npm.mjs`; a
+rerun can resume npm after a completed GitHub release.

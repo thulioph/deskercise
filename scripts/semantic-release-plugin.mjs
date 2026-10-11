@@ -21,7 +21,6 @@ export function prepare(_config, context) {
 export function publish(config, { cwd, nextRelease }) {
   const env = { ...process.env, RELEASE_VERSION: nextRelease.version, RELEASE_COMMIT: nextRelease.gitHead };
   execFileSync('bash', ['scripts/publish-release.sh'], { cwd, env, stdio: 'inherit' });
-  // Enable explicitly when integrating the npm Trusted Publishing PR (#3).
   if (config.npmPublish) execFileSync(process.execPath, ['scripts/publish-npm.mjs'], { cwd, env, stdio: 'inherit' });
   return { name: `Deskercise ${nextRelease.gitTag}` };
 }

@@ -11,6 +11,7 @@ try {
   const packageDirectory = process.env.PACKAGE_DIRECTORY ? path.resolve(process.env.PACKAGE_DIRECTORY) : temporary;
   mkdirSync(packageDirectory, { recursive: true });
   const [packed] = JSON.parse(run('npm', ['pack', '--json', '--pack-destination', packageDirectory]));
+  // Keep GitHub release asset names stable when npm adds a scope to the filename.
   const filename = `deskercise-${packageInfo.version}.tgz`;
   if (packed.filename !== filename) renameSync(path.join(packageDirectory, packed.filename), path.join(packageDirectory, filename));
   const files = packed.files.map(file => file.path);

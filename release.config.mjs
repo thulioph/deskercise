@@ -7,6 +7,6 @@ export default {
   plugins: [
     ['@semantic-release/commit-analyzer', commitOptions],
     ['@semantic-release/release-notes-generator', commitOptions],
-    ['./scripts/semantic-release-plugin.mjs', { npmPublish: false }],
+    ['./scripts/semantic-release-plugin.mjs', { npmPublish: true }],
   ],
 };

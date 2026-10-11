@@ -6,6 +6,19 @@ Short workplace movement breaks for people who work at a computer. A foreground 
 
 Requires **Node.js 22.13+**; Node 24 is recommended. macOS is the initial target platform.
 
+### Install from npm
+
+After the maintainer completes the [npm publishing setup](docs/npm-publishing.md), install the latest public package or select an available version:
+
+```bash
+npm install --global @thulioph/deskercise
+# Example: replace 0.1.7 with an available npm version.
+npm install --global @thulioph/deskercise@0.1.7
+deskercise --version
+```
+
+The command remains `deskercise`. The npm package is public and does not require access to the private GitHub repository. Installing another version preserves local history.
+
 ### Install a release
 
 Open [GitHub Releases](https://github.com/thulioph/deskercise/releases), choose a version, and download its `deskercise-<version>.tgz` and `SHA256SUMS` assets into the same directory. Releases inherit the repository's visibility: this private repository requires GitHub access to download them.
@@ -122,13 +135,13 @@ npm run dev -- start --demo --once
 
 ## Automated releases
 
-Every PR and push to `main` runs **Commit messages**, **Tests**, and **Build**. Commitlint checks every new commit, and Husky checks messages locally after `npm ci`. Use Conventional Commits and **Rebase and merge**; see [CONTRIBUTING.md](CONTRIBUTING.md) for examples, correcting messages, and repository setup. No branch protection is configured, so passing checks remain a contributor responsibility.
+Every PR and push to `main` runs **Commit messages**, **Tests**, and **Build**. Commitlint checks every new commit, and Husky checks messages locally after `npm ci`. Use Conventional Commits and **Rebase and merge**; see [CONTRIBUTING.md](CONTRIBUTING.md) for examples, correcting messages, and repository setup. No branch protection is configured, so passing checks remain a contributor responsibility. The build job also installs the packed app in a temporary directory, checks its version, CLI commands, native SQLite, and offline report, and runs an npm publication dry run.
 
 After all three checks pass on a push to `main`, Semantic Release determines the next version from commits since the latest `v<version>` tag: `fix`/`perf` produce a patch, `feat` a minor, and breaking changes a major. Documentation or maintenance alone does not produce a release. Existing tags such as `v0.1.4` are preserved; CI run numbers no longer determine versions.
 
-For a releasable change, the exact validated commit is rebuilt and packaged with an npm shrinkwrap. The package is installed and verified before publishing a GitHub Release with `deskercise-<version>.tgz`, `SHA256SUMS`, and an automatically generated `CHANGELOG.md`. Release notes contain the same changelog. Version changes are applied only in CI; no version-bump commit is pushed to `main`. Release jobs are serialized and failed publication can resume the same tagged version on a rerun. PRs and manual CI runs never publish.
+For a releasable change, the exact validated commit is rebuilt and packaged with an npm shrinkwrap. The package is installed and verified before publishing a GitHub Release with `deskercise-<version>.tgz`, `SHA256SUMS`, and an automatically generated `CHANGELOG.md`, then publishing that same verified `.tgz` to npm through Trusted Publishing. Release notes contain the same changelog. Version changes are applied only in CI; no version-bump commit is pushed to `main`. Git tags identify the original validated source commit, and `deskercise --version` reports the installed package version. GitHub release assets keep their `deskercise-<version>.tgz` filename even though the npm package is scoped.
 
-This change publishes GitHub Releases. Integration with the separate npm Trusted Publishing PR is documented in [CONTRIBUTING.md](CONTRIBUTING.md#integrating-npm-publishing-pr-3), with one semantic version shared by both destinations.
+The release job uses GitHub's built-in token for GitHub Releases and OIDC for npm; there is no `NPM_TOKEN` secret. Complete the [one-time npm setup](docs/npm-publishing.md) before the first publish. Release jobs are serialized and queued so older versions published later use the `previous` npm tag and cannot replace a newer `latest`. Failed publication can resume the same tagged version on a rerun; retrying an already-published npm version skips it only if the registry integrity matches the verified tarball. Registry errors or conflicting contents fail the job. PRs and manual CI runs never publish.
 
 ## First test on macOS
 
