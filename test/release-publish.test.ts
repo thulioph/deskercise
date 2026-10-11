@@ -10,13 +10,14 @@ function publish(metadata?: { isDraft: boolean; targetCommitish: string }, uploa
   const directory = mkdtempSync(path.join(tmpdir(), 'deskercise-publish-'));
   const log = path.join(directory, 'calls.jsonl');
   mkdirSync(path.join(directory, 'release'));
+  writeFileSync(path.join(directory, 'release/CHANGELOG.md'), '### Bug Fixes\n\n* fix timer\n');
   const fakeGh = path.join(directory, 'gh');
   writeFileSync(fakeGh, `#!/usr/bin/env node
 import { appendFileSync } from 'node:fs';
 const args = process.argv.slice(2);
 appendFileSync(process.env.CALL_LOG, JSON.stringify(args) + '\\n');
 if (args[1] === 'view') {
-  if (!process.env.RELEASE_METADATA) process.exit(1);
+  if (!process.env.RELEASE_METADATA) { console.error('release not found'); process.exit(1); }
   console.log(process.env.RELEASE_METADATA);
 }
 if (args[1] === 'upload' && process.env.UPLOAD_FAILS === 'true') process.exit(1);
@@ -47,6 +48,8 @@ test('new releases target the validated commit and remain drafts until assets ar
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(result.calls.map(call => call[1]), ['view', 'create', 'upload', 'edit']);
   assert(result.calls[1].includes('--draft'));
+  assert(result.calls[1].includes('--verify-tag'));
+  assert(!result.calls[1].includes('--generate-notes'));
   assert.equal(result.calls[1][result.calls[1].indexOf('--target') + 1], 'validated-sha');
 });
 
@@ -55,6 +58,7 @@ test('incomplete drafts upload assets before publication and do not recreate the
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(result.calls.map(call => call[1]), ['view', 'upload', 'edit']);
   assert(result.calls[1].includes('release/SHA256SUMS'));
+  assert(result.calls[1].includes('release/CHANGELOG.md'));
   assert(result.calls[2].includes('--draft=false'));
 });
 
@@ -70,3 +74,4 @@ test('a version associated with another commit cannot be overwritten', () => {
   assert.match(result.stderr, /different commit/);
   assert.deepEqual(result.calls.map(call => call[1]), ['view']);
 });
+

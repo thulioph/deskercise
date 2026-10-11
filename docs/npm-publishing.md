@@ -52,7 +52,7 @@ npm install --global @thulioph/deskercise
 deskercise --version
 ```
 
-Versions use the base package patch plus the CI run number, as described in the README. PR checks and dry runs never publish. The `latest` npm tag stays on the newest stable version; an older merge finishing later is published under `previous` and remains installable by its exact version.
+Versions come from Semantic Release and Conventional Commits, as described in the README: `fix`/`perf` produce a patch, `feat` a minor, and breaking changes a major. Bootstrap with a version below the next semantic release. PR checks and dry runs never publish. The `latest` npm tag stays on the newest stable version; an older merge finishing later is published under `previous` and remains installable by its exact version.
 
 If publication fails, inspect the Release job. Check the scope owner, publisher repository/workflow fields, direct-publish permission, configuration expiry, and package access. Fix the npm configuration and rerun the failed job. An existing package version is skipped only when its SHA-512 integrity matches the local verified tarball; conflicting bytes stop the workflow.
 
