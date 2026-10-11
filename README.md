@@ -46,6 +46,10 @@ deskercise report --no-open
 
 `--interval` is in minutes and overrides your preference for the current run only. If no configuration exists yet, that value becomes your initial preference. To change the saved preference, edit `intervalMinutes` in `~/.deskercise/config.json`.
 
+## Live session dashboard
+
+The terminal shows elapsed session time, the next break countdown, completed breaks, and confirmed active minutes. Totals belong to the current session and increase only after you confirm completion. Demo sessions are labelled separately. The countdown updates while the terminal remains open; snoozing shows when the same exercise will return.
+
 ## Exercises and references
 
 The catalog has **15 workplace movement exercises** for the neck, shoulders, hands, wrists, arms, back, chest, and legs. Each entry includes instructions, position, precautions, and a source URL. It is not a sports training program.

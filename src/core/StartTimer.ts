@@ -1,5 +1,5 @@
 import type { Analytics, Catalog, Clock, Interaction, Notifier, Ids } from './ports.js';
-import type { ExerciseEvent, Status, Exercise, View } from './model.js';
+import type { ExerciseEvent, Status, Exercise, View, SessionSummary } from './model.js';
 export interface TimerOptions {
   intervalMinutes: number; snoozeSeconds: number; promptTimeoutSeconds: number;
   confirmationTimeoutSeconds: number; demo: boolean; once: boolean; exerciseSeconds?: number;
@@ -25,12 +25,13 @@ export class StartTimer {
   }
   async execute(options: TimerOptions, signal: AbortSignal): Promise<void> {
     const sessionId = this.ids.next();
+    const session: SessionSummary = { startedAt: this.clock.now(), completed: 0, activeSeconds: 0 };
     this.db.startSession({ id: sessionId, startedAt: this.iso(), intervalMinutes: options.intervalMinutes, demo: options.demo });
     let current: ExerciseEvent | undefined;
     let exercise: Exercise | undefined;
     let previousId: string | undefined;
     let startedMono: number | undefined;
-    const show = (view: Omit<View, 'demo'>) => this.ui.show({ ...view, demo: options.demo });
+    const show = (view: Omit<View, 'demo' | 'session'>) => this.ui.show({ ...view, demo: options.demo, session: { ...session } });
     const record = (status: Status) => {
       if (!current) return;
       current.status = status;
@@ -87,6 +88,7 @@ export class StartTimer {
           current.resolvedAt = this.iso(); record(decision === 'skip' ? 'SKIPPED' : 'EXPIRED');
         }
         const status = current.status;
+        if (status === 'COMPLETED') { session.completed++; session.activeSeconds += current.actualSeconds; }
         current = undefined;
         startedMono = undefined;
         if (options.once) { show({ phase: 'done', message: `Saved: ${status}. Run deskercise report to view it.` }); break; }

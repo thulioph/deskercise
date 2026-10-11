@@ -16,9 +16,11 @@ export interface ExerciseEvent {
 }
 export interface Session { id: string; startedAt: string; intervalMinutes: number; demo: boolean }
 export interface Action { eventId: string; at: string; status: Status }
+export interface SessionSummary { startedAt: number; completed: number; activeSeconds: number }
 export interface View {
   phase: 'waiting' | 'prompt' | 'snoozing' | 'exercise' | 'confirm' | 'done';
   exercise?: Exercise; deadline?: number; durationSeconds?: number; message?: string; demo: boolean;
+  session?: SessionSummary;
 }
 export interface DailyStats { date: string; prompted: number; completed: number; seconds: number }
 export interface ExerciseStats {
