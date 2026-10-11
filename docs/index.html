@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#E6EBE7" />
+    <title>Deskercise — sixty seconds between the sitting</title>
+    <meta
+      name="description"
+      content="Local-first macOS CLI for short workplace movement breaks. Timed exercises, on-device history, offline HTML report. No accounts or telemetry."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="chapel">
+      <div class="rail">
+        <nav class="top" aria-label="Primary">
+          <a href="https://github.com/thulioph/deskercise">GitHub</a>
+        </nav>
+        <div class="chapel-copy">
+          <h1 class="brand" translate="no">Deskercise</h1>
+          <p class="line">Sixty seconds between the sitting.</p>
+        </div>
+        <section class="ritual-section" aria-labelledby="ritual-heading">
+          <h2 id="ritual-heading" class="visually-hidden">A break in the terminal</h2>
+          <div class="ritual" id="ritual" translate="no">
+            <pre class="ritual-log" aria-label="Example Deskercise session">waiting 45m …
+
+Break · Gentle neck turns
+  <span class="key">[1]</span> start   <span class="key">[2]</span> skip   <span class="key">[3]</span> snooze
+
+▶ <span class="timer">0:60</span>
+  sit upright · look gently left, then right
+
+Completed?  <span class="key">[y]</span> / <span class="key">[n]</span></pre>
+          </div>
+        </section>
+        <section class="chapel-install prose" aria-labelledby="install-heading">
+          <h2 id="install-heading">Install</h2>
+          <div class="install-panel">
+            <div
+              class="install-tabs"
+              role="tablist"
+              aria-label="Package manager"
+            >
+              <button
+                type="button"
+                class="install-tab"
+                role="tab"
+                id="tab-npm"
+                aria-selected="true"
+                aria-controls="install-cmd-panel"
+                data-cmd="npm install --global @thulioph/deskercise"
+              >
+                npm
+              </button>
+              <button
+                type="button"
+                class="install-tab"
+                role="tab"
+                id="tab-pnpm"
+                aria-selected="false"
+                aria-controls="install-cmd-panel"
+                data-cmd="pnpm add --global @thulioph/deskercise"
+                tabindex="-1"
+              >
+                pnpm
+              </button>
+              <button
+                type="button"
+                class="install-tab"
+                role="tab"
+                id="tab-yarn"
+                aria-selected="false"
+                aria-controls="install-cmd-panel"
+                data-cmd="yarn global add @thulioph/deskercise"
+                tabindex="-1"
+              >
+                yarn
+              </button>
+              <button
+                type="button"
+                class="install-tab"
+                role="tab"
+                id="tab-bun"
+                aria-selected="false"
+                aria-controls="install-cmd-panel"
+                data-cmd="bun add --global @thulioph/deskercise"
+                tabindex="-1"
+              >
+                bun
+              </button>
+            </div>
+            <div
+              class="install"
+              id="install-cmd-panel"
+              role="tabpanel"
+              aria-labelledby="tab-npm"
+            >
+              <code id="install-cmd" translate="no">npm install --global @thulioph/deskercise</code>
+              <button
+                type="button"
+                id="copy-install"
+                aria-label="Copy install command"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+          <p id="copy-status" class="copy-status" aria-live="polite"></p>
+          <p class="install-note">Requires Node&nbsp;22.13+ on macOS.</p>
+          <p class="install-links">
+            <a href="https://github.com/thulioph/deskercise/releases">Releases</a>
+          </p>
+        </section>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="why-section" aria-labelledby="why-heading">
+        <div class="rail">
+          <div class="prose">
+            <h2 id="why-heading">Why breaks</h2>
+            <p>
+              Long stretches at a desk load the same places over and over — neck,
+              shoulders, hands, back. Short movement breaks interrupt that load
+              before it piles up into the day.
+            </p>
+            <p>
+              Deskercise’s exercises are shortened adaptations of workplace
+              physiotherapy materials. The sixty seconds are a break window that
+              includes rest — not a stretch held for the whole timer.
+            </p>
+            <ul class="refs">
+              <li>
+                <a
+                  href="https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/"
+                  rel="noopener noreferrer"
+                >
+                  Newcastle Hospitals NHS — 1&nbsp;minute body check
+                </a>
+                <span class="ref-note">Quick seated checks for desk workers.</span>
+              </li>
+              <li>
+                <a
+                  href="https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html"
+                  rel="noopener noreferrer"
+                >
+                  CCOHS — Stretching at the workstation
+                </a>
+                <span class="ref-note">Workstation stretches while you stay at your seat.</span>
+              </li>
+              <li>
+                <a
+                  href="https://www.merseycare.nhs.uk/msk-work/desk-based-jobs"
+                  rel="noopener noreferrer"
+                >
+                  Mersey Care NHS — Desk-based jobs
+                </a>
+                <span class="ref-note">Movement advice for people in desk-based roles.</span>
+              </li>
+            </ul>
+            <p class="why-note">
+              The 45-minute interval and 60-second window are product choices, not
+              recommendations from these organizations.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="commands-section" aria-labelledby="commands-heading">
+        <div class="rail">
+          <div class="prose">
+            <h2 id="commands-heading">Commands</h2>
+            <p class="commands-lead">Two things you run after install.</p>
+          </div>
+          <div class="command-list">
+            <div class="command-block">
+              <div class="install" role="group" aria-label="deskercise start">
+                <code id="cmd-start" translate="no">deskercise start</code>
+                <button
+                  type="button"
+                  class="copy-cmd"
+                  data-copy-target="cmd-start"
+                  aria-label="Copy start command"
+                >
+                  Copy
+                </button>
+              </div>
+              <p class="command-note">
+                Keep the terminal open. Breaks arrive on your interval; confirm
+                when the minute ends.
+              </p>
+            </div>
+            <div class="command-block">
+              <div class="install" role="group" aria-label="deskercise report">
+                <code id="cmd-report" translate="no">deskercise report</code>
+                <button
+                  type="button"
+                  class="copy-cmd"
+                  data-copy-target="cmd-report"
+                  aria-label="Copy report command"
+                >
+                  Copy
+                </button>
+              </div>
+              <p class="command-note">
+                Opens this week’s offline HTML from
+                <code translate="no">~/.deskercise</code>.
+              </p>
+              <p class="command-links">
+                <a href="./demo-report.html">Sample report</a>
+              </p>
+            </div>
+          </div>
+          <p id="copy-status-commands" class="copy-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="privacy-section" aria-labelledby="privacy-heading">
+        <div class="rail">
+          <div class="prose">
+            <h2 id="privacy-heading">On your machine</h2>
+            <p>
+              Local history and the HTML report stay under
+              <code translate="no">~/.deskercise</code>. No accounts, no telemetry,
+              no data shared.
+            </p>
+            <p>
+              No network requests while you run breaks or open the report —
+              install only talks to npm.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="close">
+      <div class="rail">
+        <div class="prose">
+          <p class="disclaimer">
+            Deskercise is a habit log, not medical advice. Stop any movement that
+            causes pain.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./site.js" defer></script>
+  </body>
+</html>
