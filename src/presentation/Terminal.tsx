@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Text, render, useInput } from 'ink';
+import { Box, Text, render, useInput, type RenderOptions } from 'ink';
 import type { Interaction } from '../core/ports.js';
 import type { View } from '../core/model.js';
 import { SessionSummary } from './SessionSummary.js';
@@ -72,5 +72,7 @@ export class Terminal implements Interaction {
       this.snapshot = { ...this.snapshot, choices }; this.publish();
     });
   }
-  mount(onExit: () => void) { return render(<Screen terminal={this} onExit={onExit} />, { exitOnCtrlC: false }); }
+  mount(onExit: () => void, options: RenderOptions = {}) {
+    return render(<Screen terminal={this} onExit={onExit} />, { ...options, exitOnCtrlC: false });
+  }
 }
