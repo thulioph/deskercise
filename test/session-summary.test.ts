@@ -13,8 +13,9 @@ async function output(view: View, now: number) {
   const app = render(createElement(SessionSummary, { view, now }), {
     stdout: stream as unknown as NodeJS.WriteStream, debug: true, patchConsole: false, exitOnCtrlC: false,
   });
+  const exited = app.waitUntilExit();
   await new Promise(resolve => setImmediate(resolve));
-  app.unmount(); await app.waitUntilExit();
+  app.unmount(); await exited; app.cleanup();
   return text;
 }
 const startedAt = Date.parse('2026-10-08T12:00:00Z');

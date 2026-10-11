@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Text, render, useInput } from 'ink';
 import type { Interaction } from '../core/ports.js';
 import type { View } from '../core/model.js';
+import { SessionSummary } from './SessionSummary.js';
 type Snapshot = { view: View; choices: readonly string[]; warning?: string };
 const labels: Record<string, string> = {
   start: '[1] Start', skip: '[2] Skip', snooze: '[3] Snooze', stop: '[s] Stop early',
@@ -28,6 +29,7 @@ function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () => void }
   const title = { waiting: 'Space to focus', prompt: 'Time to move', snoozing: 'A little later', exercise: 'Your movement break', confirm: 'How did it go?', done: 'Session saved' }[view.phase];
   return <Box flexDirection="column" paddingX={2} paddingY={1} borderStyle="round" borderColor="cyan">
     <Text bold color="cyan">DESKERCISE {view.demo ? '· DEMO / 5-second test' : '· workplace movement'}</Text>
+    <SessionSummary view={view} now={now} />
     <Text bold>{title}</Text>
     {view.exercise && <>
       <Text color="green">{view.exercise.name} · {view.exercise.bodyPart} · {view.exercise.position}</Text>
