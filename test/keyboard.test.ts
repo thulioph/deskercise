@@ -31,9 +31,16 @@ function mount(t: TestContext) {
     controllers.forEach(controller => controller.abort());
     instance.unmount(); instance.cleanup(); input.destroy(); output.destroy();
   });
-  const settle = () => delay(20);
+  const settle = async () => {
+    // Ink installs useInput/subscription in an effect; wait for mount readiness
+    // rather than depending on CPU load from other test files.
+    for (let attempt = 0; !terminal.subscribe && attempt < 200; attempt++) await delay(5);
+    assert.ok(terminal.subscribe, 'Ink screen mounted');
+    await delay(20);
+  };
   const press = async (keys: string) => { input.write(keys); await settle(); };
   const ask = async (phase: View['phase'], choices: string[]) => {
+    await settle();
     terminal.show({ phase, demo: false });
     const controller = new AbortController(); controllers.push(controller);
     let result: string | undefined;
