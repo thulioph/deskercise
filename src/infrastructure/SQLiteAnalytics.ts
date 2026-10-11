@@ -43,5 +43,11 @@ export class SQLiteAnalytics implements Analytics {
       planned_seconds AS plannedSeconds,actual_seconds AS actualSeconds,status,snooze_count AS snoozeCount
       FROM exercise_events WHERE prompted_at>=? AND prompted_at<? ORDER BY prompted_at`).all(from, to) as ExerciseEvent[];
   }
+  sessionsByIds(ids: string[]): Session[] {
+    if (!ids.length) return [];
+    const rows = this.db.prepare(`SELECT id,started_at AS startedAt,interval_minutes AS intervalMinutes,demo
+      FROM sessions WHERE id IN (${ids.map(() => '?').join(',')})`).all(...ids) as Array<Session & { demo: number | boolean }>;
+    return rows.map(r => ({ id: r.id, startedAt: r.startedAt, intervalMinutes: r.intervalMinutes, demo: Boolean(r.demo) }));
+  }
   close() { this.db.close(); }
 }

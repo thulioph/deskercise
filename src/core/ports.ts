@@ -4,6 +4,7 @@ export interface Analytics {
   endSession(id: string, at: string): void;
   saveEvent(event: ExerciseEvent, action: Action): void;
   events(from: string, to: string): ExerciseEvent[];
+  sessionsByIds(ids: string[]): Session[];
 }
 export interface Catalog { select(previousId?: string): Exercise }
 export interface Clock {
