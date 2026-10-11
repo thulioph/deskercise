@@ -11,7 +11,8 @@ import { JsonCatalog } from './infrastructure/Catalog.js';
 import { SystemClock } from './infrastructure/Clock.js';
 import { MacNotifier } from './infrastructure/Notifier.js';
 import { dataRoot, ensureDirectory, readConfig, writeConfig, validInterval } from './infrastructure/config.js';
-import { writeReport, terminalReport, openReport } from './infrastructure/report.js';
+import { writeReport, openReport } from './infrastructure/report.js';
+import { terminalReport } from './presentation/Report.js';
 import { Terminal } from './presentation/Terminal.js';
 const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string };
 const program = new Command().name('deskercise').version(version).description('Private, local workplace movement breaks. macOS prototype.');
@@ -69,7 +70,9 @@ program.command('report').description('Print a summary and generate an offline b
     const db = new SQLiteAnalytics(path.join(root, 'analytics.db'));
     try {
       const report = getReport(db);
-      console.log(terminalReport(report, !!options.demo));
+      console.log(terminalReport(report, !!options.demo, {
+        columns: process.stdout.columns, unicode: !!process.stdout.isTTY,
+      }));
       const filename = path.join(root, 'report.html'); writeReport(report, filename, !!options.demo);
       console.log(`Offline report: ${filename}`);
       if (options.open && process.platform === 'darwin') {
