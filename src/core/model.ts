@@ -21,6 +21,7 @@ export interface View {
   phase: 'waiting' | 'prompt' | 'snoozing' | 'exercise' | 'confirm' | 'done';
   exercise?: Exercise; deadline?: number; durationSeconds?: number; message?: string; demo: boolean;
   session?: SessionSummary;
+  lastResult?: Status;
 }
 export interface DailyStats { date: string; prompted: number; completed: number; seconds: number }
 export interface ExerciseStats {
