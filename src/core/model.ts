@@ -21,9 +21,14 @@ export interface View {
   exercise?: Exercise; deadline?: number; durationSeconds?: number; message?: string; demo: boolean;
 }
 export interface DailyStats { date: string; prompted: number; completed: number; seconds: number }
+export interface ExerciseStats {
+  id: string; name: string; bodyPart: string; completions: number; avgActualSeconds: number;
+}
 export interface Report {
   from: string; to: string; totalPrompted: number; completed: number; skipped: number;
   expired: number; interrupted: number; cancelled: number; unconfirmed: number; pending: number;
   snoozes: number; activeSeconds: number; completionRate: number;
   days: DailyStats[]; bodyParts: { name: string; completed: number }[];
+  exercises: ExerciseStats[]; sessionCount: number; demoSessions: number;
+  avgIntervalMinutes: number | null; avgResponseSeconds: number | null;
 }
