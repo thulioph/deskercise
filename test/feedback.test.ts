@@ -83,20 +83,39 @@ test('prompt and confirmation countdowns use response deadlines rather than exer
 });
 
 test('success feedback requires an explicit saved completion', async () => {
-  const ui = await screen(feedback({ phase: 'done', message: 'Saved: COMPLETED. Run deskercise report to view it.', demo: false }));
+  const ui = await screen(feedback({ phase: 'done', lastResult: 'COMPLETED', demo: false }));
   try { assert.match(ui.output(), /Completed and saved/); }
   finally { await ui.close(); }
 });
 
 for (const status of ['SKIPPED', 'EXPIRED', 'INTERRUPTED', 'CANCELLED', 'UNCONFIRMED']) {
   test(`saved ${status} feedback never celebrates completion`, async () => {
-    const ui = await screen(feedback({ phase: 'done', message: `Saved: ${status}. Run deskercise report to view it.`, demo: false }));
+    const ui = await screen(feedback({ phase: 'done', lastResult: status as View['lastResult'], demo: false }));
     try {
       assert.match(ui.output(), /Session finished/);
       assert.doesNotMatch(ui.output(), /Completed and saved/);
     } finally { await ui.close(); }
   });
 }
+
+test('confirmed completion remains visible during the next focus interval', async () => {
+  const ui = await screen(feedback({ phase: 'waiting', lastResult: 'COMPLETED', deadline: now + 60_000, durationSeconds: 60, demo: false }));
+  try {
+    assert.match(ui.output(), /Completed and saved/);
+    assert.match(ui.output(), /Next movement break in: 01:00/);
+  } finally { await ui.close(); }
+});
+
+test('unconfirmed or skipped results during focus time never show success', async () => {
+  const ui = await screen(feedback({ phase: 'waiting', lastResult: 'UNCONFIRMED', demo: false }));
+  try {
+    assert.doesNotMatch(ui.output(), /Completed and saved/);
+    await ui.update(feedback({ phase: 'waiting', lastResult: 'SKIPPED', demo: false }));
+    assert.doesNotMatch(ui.output(), /Completed and saved/);
+    await ui.update(feedback({ phase: 'exercise', lastResult: 'COMPLETED', demo: false }));
+    assert.doesNotMatch(ui.output(), /Completed and saved/);
+  } finally { await ui.close(); }
+});
 
 test('missing deadline and unknown result do not fabricate a timer or a success', async () => {
   const ui = await screen(feedback({ phase: 'done', demo: false }));
