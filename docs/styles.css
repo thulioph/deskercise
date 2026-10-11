@@ -1,0 +1,491 @@
+:root {
+  --paper: #e6ebe7;
+  --ink: #14261f;
+  --mist: #f4f6f3;
+  --moss: #5f7a58;
+  --mute: #4a6358;
+  --rule: #c5d0c6;
+
+  --font-sans: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --space: clamp(1.25rem, 4vw, 2.5rem);
+  --rail: 46rem;
+  --prose: 34rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--moss);
+}
+
+:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 10;
+  padding: 0.5rem 0.75rem;
+  background: var(--ink);
+  color: var(--mist);
+}
+
+.skip:focus {
+  left: var(--space);
+  top: var(--space);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.rail {
+  width: min(100% - 2 * var(--space), var(--rail));
+  margin-inline: auto;
+}
+
+.prose {
+  max-width: var(--prose);
+}
+
+/* Chapel — quiet, but brand follows nav (no full-viewport void) */
+.chapel {
+  padding: var(--space) 0 clamp(2.5rem, 7vh, 4rem);
+}
+
+.top {
+  font-size: 0.95rem;
+}
+
+.top a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.top a:hover {
+  text-decoration: underline;
+}
+
+.chapel-copy {
+  margin-top: clamp(2.5rem, 8vh, 4.5rem);
+}
+
+.brand {
+  margin: 0;
+  font-size: clamp(3.5rem, 12vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.line {
+  margin: 1.1rem 0 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--mute);
+  white-space: nowrap;
+}
+
+.chapel-install {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.chapel-install h2,
+.why-section h2,
+.privacy-section h2,
+.commands-section h2 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.4rem, 2.8vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  text-wrap: pretty;
+}
+
+.chapel-install h2::after,
+.why-section h2::after,
+.privacy-section h2::after,
+.commands-section h2::after {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 3px;
+  margin-top: 0.55rem;
+  background: var(--moss);
+}
+
+/* Ritual (in chapel, before install) */
+.ritual-section {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.ritual {
+  background: var(--mist);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.ritual.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+.ritual-log {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.82rem, 2.1vw, 0.95rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.ritual-log .key {
+  color: var(--moss);
+  font-weight: 500;
+}
+
+.ritual-log .timer {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Why */
+.why-section {
+  padding: clamp(1rem, 4vw, 2rem) 0 clamp(2.5rem, 7vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+
+/* Privacy */
+.privacy-section {
+  padding: clamp(1rem, 4vw, 2rem) 0 clamp(2.5rem, 7vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+
+.why-section p,
+.privacy-section p {
+  margin: 0;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.why-section p + p,
+.privacy-section p + p {
+  margin-top: 0.85rem;
+}
+
+.refs {
+  list-style: none;
+  margin: 1.35rem 0 0;
+  padding: 0;
+}
+
+.refs li + li {
+  margin-top: 0.95rem;
+}
+
+.refs a {
+  display: inline-block;
+  font-weight: 500;
+  text-decoration: none;
+  text-wrap: pretty;
+}
+
+.refs a:hover {
+  text-decoration: underline;
+}
+
+.ref-note {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--mute);
+  font-size: 0.95rem;
+  text-wrap: pretty;
+}
+
+.why-note {
+  margin-top: 1.25rem;
+  color: var(--mute);
+  font-size: 0.95rem;
+}
+
+/* Install (in chapel) */
+.install-panel {
+  display: grid;
+  gap: 0;
+}
+
+.install-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  border: 1px solid var(--ink);
+  border-bottom: 0;
+  background: transparent;
+}
+
+.install-tab {
+  appearance: none;
+  border: 0;
+  border-right: 1px solid var(--rule);
+  background: transparent;
+  color: var(--mute);
+  padding: 0.55rem 0.95rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.install-tab:last-child {
+  border-right: 0;
+}
+
+.install-tab:hover {
+  color: var(--ink);
+  background: rgba(20, 38, 31, 0.04);
+}
+
+.install-tab[aria-selected="true"] {
+  color: var(--ink);
+  background: rgba(20, 38, 31, 0.08);
+  box-shadow: inset 0 -2px 0 var(--moss);
+}
+
+.install {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--mist);
+}
+
+.install code {
+  display: block;
+  min-width: 0;
+  padding: 0.9rem 1rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 2vw, 0.88rem);
+  line-height: 1.45;
+  overflow-x: auto;
+  white-space: nowrap;
+  color: var(--mist);
+}
+
+.install > button {
+  border: 0;
+  border-left: 1px solid rgba(244, 246, 243, 0.2);
+  background: transparent;
+  color: var(--mist);
+  padding: 0 1.1rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.install > button:hover,
+.install > button[data-copied="true"] {
+  background: rgba(95, 122, 88, 0.35);
+}
+
+.copy-status {
+  min-height: 1.25rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.85rem;
+  color: var(--moss);
+}
+
+.install-note {
+  margin: 0.85rem 0 0;
+  color: var(--mute);
+  font-size: 0.98rem;
+  text-wrap: pretty;
+}
+
+.install-note code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+.install-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  margin: 1.25rem 0 0;
+}
+
+.install-links a {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.install-links a:hover {
+  text-decoration: underline;
+}
+
+/* Commands */
+.commands-section {
+  padding: clamp(1rem, 4vw, 2rem) 0 clamp(3rem, 8vw, 4.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.commands-lead {
+  margin: -0.35rem 0 1.35rem;
+  color: var(--mute);
+  font-size: 1.02rem;
+  text-wrap: pretty;
+}
+
+.command-list {
+  display: grid;
+  gap: 1.5rem;
+  max-width: var(--rail);
+}
+
+.command-block .install code {
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.command-note {
+  margin: 0.7rem 0 0;
+  max-width: var(--prose);
+  color: var(--mute);
+  font-size: 0.98rem;
+  text-wrap: pretty;
+}
+
+.command-note code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+.command-links {
+  margin: 0.65rem 0 0;
+}
+
+.command-links a {
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.command-links a:hover {
+  text-decoration: underline;
+}
+
+/* Close */
+.close {
+  padding: 0 0 clamp(3rem, 8vw, 4.5rem);
+}
+
+.close p {
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.98rem;
+  text-wrap: pretty;
+}
+
+.close p + p {
+  margin-top: 0.85rem;
+}
+
+.close code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--ink);
+}
+
+.disclaimer {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ritual {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .install-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .install-tab {
+    padding: 0.65rem 0.35rem;
+    text-align: center;
+    border-right: 1px solid var(--rule);
+  }
+
+  .install-tab:nth-child(4n) {
+    border-right: 0;
+  }
+
+  .install {
+    grid-template-columns: 1fr;
+  }
+
+  .install > button {
+    border-left: 0;
+    border-top: 1px solid rgba(244, 246, 243, 0.2);
+    min-height: 2.75rem;
+  }
+}

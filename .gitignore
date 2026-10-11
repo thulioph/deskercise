@@ -8,3 +8,6 @@ release/
 .DS_Store
 npm-shrinkwrap.json
 
+# Local agent specs/plans — keep out of git and GitHub Pages (/docs)
+docs/superpowers/
+
