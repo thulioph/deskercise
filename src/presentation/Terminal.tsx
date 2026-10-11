@@ -4,9 +4,10 @@ import type { Interaction } from '../core/ports.js';
 import type { View } from '../core/model.js';
 import { SessionSummary } from './SessionSummary.js';
 import { ShortcutBar } from './ShortcutBar.js';
+import { ExerciseIllustration } from './ExerciseIllustration.js';
 type Snapshot = { view: View; choices: readonly string[]; warning?: string; selected?: string; requestId: number };
 const keys: Record<string, string> = { '1': 'start', '2': 'skip', '3': 'snooze', s: 'stop', y: 'completed', n: 'not-completed' };
-function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () => void }) {
+export function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () => void }) {
   const [snapshot, setSnapshot] = useState(terminal.snapshot);
   const [now, setNow] = useState(Date.now());
   useEffect(() => { terminal.subscribe = setSnapshot; return () => { terminal.subscribe = undefined; }; }, [terminal]);
@@ -37,6 +38,7 @@ function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () => void }
       <Text dimColor>Break window: {view.durationSeconds ?? view.exercise.durationSeconds}s</Text>
       {['prompt', 'exercise'].includes(view.phase) && <>
         <Text> </Text>
+        <ExerciseIllustration exerciseId={view.exercise.id} />
         {view.exercise.instructions.map((step, i) => <Text key={i}>{i + 1}. {step}</Text>)}
         <Text dimColor>Rest after the listed movements. Do not hold a stretch for the whole timer.</Text>
         <Text color="yellow">{view.exercise.caution}</Text>
