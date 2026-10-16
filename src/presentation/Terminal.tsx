@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Box, Text, render, useInput, type RenderOptions } from 'ink';
+import { render, useInput, type RenderOptions } from 'ink';
 import type { Interaction } from '../core/ports.js';
 import type { View } from '../core/model.js';
-import { SessionSummary } from './SessionSummary.js';
-import { ShortcutBar } from './ShortcutBar.js';
-import { ExerciseIllustration } from './ExerciseIllustration.js';
-import { TimerFeedback } from './TimerFeedback.js';
+import { TerminalLayout } from './TerminalLayout.js';
 type Snapshot = { view: View; choices: readonly string[]; warning?: string; selected?: string; requestId: number };
 const keys: Record<string, string> = { '1': 'start', '2': 'skip', '3': 'snooze', s: 'stop', y: 'completed', n: 'not-completed' };
 export function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () => void }) {
@@ -22,31 +19,7 @@ export function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () =>
     const action = keys[input.toLowerCase()];
     if (action && snapshot.choices.includes(action)) terminal.answer(action, snapshot.requestId);
   });
-  const { view, choices, selected, warning } = snapshot;
-  const title = { waiting: 'Space to focus', prompt: 'Time to move', snoozing: 'A little later', exercise: 'Your movement break', confirm: 'How did it go?', done: 'Session saved' }[view.phase];
-  return <Box flexDirection="column" paddingX={2} paddingY={1} borderStyle="round" borderColor="cyan">
-    <Text bold color="cyan">DESKERCISE {view.demo ? '· DEMO / 5-second test' : '· workplace movement'}</Text>
-    <SessionSummary view={view} now={now} />
-    <Text bold>{title}</Text>
-    {view.exercise && <>
-      <Text color="green">{view.exercise.name} · {view.exercise.bodyPart} · {view.exercise.position}</Text>
-      <Text dimColor>Break window: {view.durationSeconds ?? view.exercise.durationSeconds}s</Text>
-      {['prompt', 'exercise'].includes(view.phase) && <>
-        <Text> </Text>
-        <ExerciseIllustration exerciseId={view.exercise.id} />
-        {view.exercise.instructions.map((step, i) => <Text key={i}>{i + 1}. {step}</Text>)}
-        <Text dimColor>Rest after the listed movements. Do not hold a stretch for the whole timer.</Text>
-        <Text color="yellow">{view.exercise.caution}</Text>
-        <Text dimColor>Source: {view.exercise.source.title}</Text>
-      </>}
-    </>}
-    {view.message && <Text>{view.message}</Text>}
-    <TimerFeedback view={view} now={now} />
-    <Text> </Text>
-    {view.phase === 'confirm' && <Text>Did you perform the exercise? The timer alone does not record a completion.</Text>}
-    <ShortcutBar choices={choices} selected={selected} />
-    {warning && <Text color="yellow">{warning}</Text>}
-  </Box>;
+  return <TerminalLayout snapshot={snapshot} now={now} />;
 }
 export class Terminal implements Interaction {
   snapshot: Snapshot = { view: { phase: 'waiting', demo: false }, choices: [], requestId: 0 };
