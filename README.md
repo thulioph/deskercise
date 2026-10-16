@@ -91,6 +91,11 @@ The reporting period is **today and the previous six days in your local timezone
 
 Preview a sample report at [`docs/demo-report.html`](docs/demo-report.html).
 
+`deskercise report` also prints seven days of prompted and completed breaks,
+confirmed minutes, and bar charts for daily completions and body areas directly
+in the terminal. Narrow terminals use stacked history rows; redirected output
+uses plain ASCII bars. The same command still generates the offline HTML report.
+
 ## Other ways to install
 
 ### GitHub Release
