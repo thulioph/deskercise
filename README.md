@@ -46,6 +46,10 @@ and movement windows. When the break timer ends, it asks for confirmation;
 only a saved `COMPLETED` result shows success. Follow the listed movements, then
 rest for the remainder of the break window.
 
+### Terminal layout
+
+Resize the terminal while Deskercise runs: at 100 columns or more, exercise instructions sit beside the timer and actions. Smaller terminals stack the timer and actions above the instructions. Precautions and sources remain visible in both layouts. Borders and spacing shrink to fit narrow terminals; when terminal width is unavailable, the layout uses 80 columns.
+
 ```bash
 deskercise start --interval 1 --once
 deskercise start --no-notifications
