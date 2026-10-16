@@ -28,12 +28,16 @@ Each break offers:
 
 | Key | Action |
 |---|---|
+| `↑` / `↓` | Select an available action (wraps at either end) |
+| `Enter` | Choose the highlighted action |
 | `1` | Start the 60-second timer |
 | `2` | Skip this exercise |
 | `3` | Snooze the same exercise for 10 minutes |
 | `s` | Stop an exercise early |
 | `y` / `n` | Confirm / deny completion after the timer |
 | `q` / `Ctrl+C` | End and save the session |
+
+The highlighted action resets to the first option at each prompt. The shortcut bar shows the available choices; numeric and letter shortcuts work directly without moving the selection.
 
 The next interval starts after the exercise is resolved. An unanswered prompt expires after 5 minutes. The final confirmation also expires after 5 minutes; that records `UNCONFIRMED` and adds no completed minutes.
 
