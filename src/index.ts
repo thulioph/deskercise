@@ -57,6 +57,9 @@ program.command('start').description('Run the foreground movement timer')
       screen?.unmount(); db.close();
       process.removeListener('SIGINT', stop); process.removeListener('SIGTERM', stop);
     }
+    if (terminal.snapshot.view.phase === 'done' && terminal.snapshot.view.lastResult) {
+      console.log(`Saved: ${terminal.snapshot.view.lastResult}.`);
+    }
     console.log(`Session saved. ${options.demo ? 'Demo data: deskercise report --demo' : 'View it with deskercise report'}`);
   });
 program.command('report').description('Print a summary and generate an offline browser report')

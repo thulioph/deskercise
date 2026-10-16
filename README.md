@@ -41,6 +41,11 @@ The highlighted action resets to the first option at each prompt. The shortcut b
 
 The next interval starts after the exercise is resolved. An unanswered prompt expires after 5 minutes. The final confirmation also expires after 5 minutes; that records `UNCONFIRMED` and adds no completed minutes.
 
+The terminal labels each countdown and shows elapsed progress during focus, snooze,
+and movement windows. When the break timer ends, it asks for confirmation;
+only a saved `COMPLETED` result shows success. Follow the listed movements, then
+rest for the remainder of the break window.
+
 ```bash
 deskercise start --interval 1 --once
 deskercise start --no-notifications

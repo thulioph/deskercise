@@ -30,6 +30,7 @@ export class StartTimer {
     let current: ExerciseEvent | undefined;
     let exercise: Exercise | undefined;
     let previousId: string | undefined;
+    let lastResult: Status | undefined;
     let startedMono: number | undefined;
     const show = (view: Omit<View, 'demo' | 'session'>) => this.ui.show({ ...view, demo: options.demo, session: { ...session } });
     const record = (status: Status) => {
@@ -40,7 +41,7 @@ export class StartTimer {
     try {
       while (!signal.aborted) {
         show({ phase: 'waiting', deadline: this.clock.now() + options.intervalMinutes * 60_000,
-          durationSeconds: options.intervalMinutes * 60, message: 'Next movement break' });
+          durationSeconds: options.intervalMinutes * 60, message: 'Next movement break', lastResult });
         await this.clock.wait(options.intervalMinutes * 60_000, signal);
         exercise = this.catalog.select(previousId);
         previousId = exercise.id;
@@ -89,9 +90,10 @@ export class StartTimer {
         }
         const status = current.status;
         if (status === 'COMPLETED') { session.completed++; session.activeSeconds += current.actualSeconds; }
+        lastResult = status;
         current = undefined;
         startedMono = undefined;
-        if (options.once) { show({ phase: 'done', message: `Saved: ${status}. Run deskercise report to view it.` }); break; }
+        if (options.once) { show({ phase: 'done', lastResult: status, message: `Saved: ${status}. Run deskercise report to view it.` }); break; }
       }
     } catch (error) {
       if (current) {
