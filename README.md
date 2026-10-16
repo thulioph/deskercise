@@ -58,6 +58,8 @@ The terminal shows elapsed session time, the next break countdown, completed bre
 
 The catalog has **15 workplace movement exercises** for the neck, shoulders, hands, wrists, arms, back, chest, and legs. Each entry includes instructions, position, precautions, and a source URL. It is not a sports training program.
 
+Neck turns, shoulder rolls and the cross-body shoulder stretch include offline movement sketches during the prompt and exercise. These static cues supplement the full instructions and precautions. Sketches use ASCII in non-UTF locales or `TERM=dumb`; terminals smaller than 60 columns or 30 rows, screen-reader mode, and other exercises keep the text instructions without a sketch.
+
 - [Newcastle Hospitals NHS — 1 minute body check](https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/)
 - [CCOHS — Stretching at the workstation](https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html)
 - [Mersey Care NHS — Desk-based jobs](https://www.merseycare.nhs.uk/msk-work/desk-based-jobs)
