@@ -61,6 +61,7 @@ test('completed exercise is persisted only after explicit confirmation', async (
   const h = setup(); await prompt(h); await answer(h, 'start'); h.clock.advance(60_000); await flush();
   assert.equal(h.events()[0]?.status, 'STARTED'); await answer(h, 'completed'); await h.done;
   assert.equal(h.events()[0]?.status, 'COMPLETED'); assert.equal(h.events()[0]?.actualSeconds, 60);
+  assert.equal(h.ui.views.at(-1)?.lastResult, 'COMPLETED');
   const r = getReport(h.db, new Date(h.clock.now())); assert.equal(r.activeSeconds, 60); assert.equal(r.completionRate, 100);
   assert.equal(h.clock.tasks.size, 0); h.db.close();
 });
@@ -90,6 +91,19 @@ test('next interval begins after the previous exercise is resolved', async () =>
   const h = setup({ once: false }); await prompt(h); h.clock.advance(120_000); await answer(h, 'skip');
   h.clock.advance(59_999); await flush(); assert.equal(h.events().length, 1);
   h.clock.advance(1); await flush(); assert.equal(h.events().length, 2);
+  h.signal.abort(); await h.done; h.db.close();
+});
+test('next focus interval carries only the last explicitly resolved result', async () => {
+  const h = setup({ once: false });
+  assert.equal(h.ui.views.at(-1)?.lastResult, undefined);
+  await prompt(h); await answer(h, 'start'); h.clock.advance(60_000); await flush();
+  assert.equal(h.ui.views.at(-1)?.phase, 'confirm');
+  assert.equal(h.ui.views.at(-1)?.lastResult, undefined);
+  await answer(h, 'completed');
+  assert.equal(h.ui.views.at(-1)?.phase, 'waiting');
+  assert.equal(h.ui.views.at(-1)?.lastResult, 'COMPLETED');
+  await prompt(h); await answer(h, 'skip');
+  assert.equal(h.ui.views.at(-1)?.lastResult, 'SKIPPED');
   h.signal.abort(); await h.done; h.db.close();
 });
 for (const phase of ['waiting','prompt','snoozing','exercise','confirm'] as const) {

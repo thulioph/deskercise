@@ -5,6 +5,7 @@ import type { View } from '../core/model.js';
 import { SessionSummary } from './SessionSummary.js';
 import { ShortcutBar } from './ShortcutBar.js';
 import { ExerciseIllustration } from './ExerciseIllustration.js';
+import { TimerFeedback } from './TimerFeedback.js';
 type Snapshot = { view: View; choices: readonly string[]; warning?: string; selected?: string; requestId: number };
 const keys: Record<string, string> = { '1': 'start', '2': 'skip', '3': 'snooze', s: 'stop', y: 'completed', n: 'not-completed' };
 export function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () => void }) {
@@ -22,12 +23,6 @@ export function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () =>
     if (action && snapshot.choices.includes(action)) terminal.answer(action, snapshot.requestId);
   });
   const { view, choices, selected, warning } = snapshot;
-  const rawRemaining = Math.max(0, Math.ceil(((view.deadline ?? now) - now) / 1000));
-  const remaining = ['waiting', 'snoozing', 'exercise'].includes(view.phase) && view.durationSeconds
-    ? Math.min(view.durationSeconds, rawRemaining) : rawRemaining;
-  const formatted = `${Math.floor(remaining / 60).toString().padStart(2, '0')}:${(remaining % 60).toString().padStart(2, '0')}`;
-  const progress = view.durationSeconds ? Math.max(0, Math.min(1, 1 - remaining / view.durationSeconds)) : 0;
-  const blocks = Math.round(progress * 24);
   const title = { waiting: 'Space to focus', prompt: 'Time to move', snoozing: 'A little later', exercise: 'Your movement break', confirm: 'How did it go?', done: 'Session saved' }[view.phase];
   return <Box flexDirection="column" paddingX={2} paddingY={1} borderStyle="round" borderColor="cyan">
     <Text bold color="cyan">DESKERCISE {view.demo ? '· DEMO / 5-second test' : '· workplace movement'}</Text>
@@ -46,7 +41,7 @@ export function Screen({ terminal, onExit }: { terminal: Terminal; onExit: () =>
       </>}
     </>}
     {view.message && <Text>{view.message}</Text>}
-    {view.deadline && <Text color="cyan">{formatted} {['waiting', 'snoozing', 'exercise'].includes(view.phase) ? '━'.repeat(blocks) + '─'.repeat(24 - blocks) : 'to respond'}</Text>}
+    <TimerFeedback view={view} now={now} />
     <Text> </Text>
     {view.phase === 'confirm' && <Text>Did you perform the exercise? The timer alone does not record a completion.</Text>}
     <ShortcutBar choices={choices} selected={selected} />
