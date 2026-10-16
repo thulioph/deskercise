@@ -3,6 +3,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import type { Report } from '../core/model.js';
+export { terminalReport } from '../presentation/Report.js';
 const require = createRequire(import.meta.url);
 function esc(value: string): string {
   return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -38,20 +39,6 @@ function fmtDayLabel(isoDate: string): string {
   const day = new Intl.DateTimeFormat('en-GB', { day: 'numeric' }).format(d);
   const month = new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(d);
   return `${weekday}, ${day} ${month}`;
-}
-export function terminalReport(report: Report, demo: boolean): string {
-  return `\nDESKERCISE ${demo ? 'DEMO ' : ''}· today + previous 6 local calendar days\n\n` +
-    `  Confirmed breaks    ${report.completed} / ${report.totalPrompted}\n` +
-    `  Completion rate     ${report.completionRate.toFixed(0)}%\n` +
-    `  Confirmed minutes   ${(report.activeSeconds / 60).toFixed(1)}\n` +
-    `  Skipped / expired   ${report.skipped} / ${report.expired}\n` +
-    `  Interrupted         ${report.interrupted}\n` +
-    `  Unconfirmed         ${report.unconfirmed}\n` +
-    `  Cancelled / pending ${report.cancelled} / ${report.pending}\n` +
-    `  Snooze actions      ${report.snoozes}\n` +
-    `  Sessions            ${report.sessionCount}` +
-    (report.avgIntervalMinutes == null ? '' : ` · avg interval ${fmtNum(report.avgIntervalMinutes)} min`) + `\n` +
-    `  Avg response        ${report.avgResponseSeconds == null ? '—' : `${fmtNum(report.avgResponseSeconds)}s`}\n`;
 }
 export function writeReport(report: Report, filename: string, demo: boolean) {
   const chartPath = path.join(path.dirname(require.resolve('chart.js')), 'chart.umd.js');
