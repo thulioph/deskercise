@@ -48,7 +48,7 @@ rest for the remainder of the break window.
 
 ### Terminal layout
 
-Resize the terminal while Deskercise runs: at 100 columns or more, exercise instructions sit beside the timer and actions. Smaller terminals stack the timer and actions above the instructions. Precautions and sources remain visible in both layouts. Borders and spacing shrink to fit narrow terminals; when terminal width is unavailable, the layout uses 80 columns.
+Resize the terminal while Deskercise runs: at 100 columns or more, exercise instructions sit beside the timer and actions. On extra-wide terminals, the dashboard stays at 120 columns and is centered, keeping the actions close to the instructions. Smaller terminals stack the timer and actions above the instructions. Precautions and sources remain visible in both layouts. Borders and spacing shrink to fit narrow terminals; when terminal width is unavailable, the layout uses 80 columns.
 
 ```bash
 deskercise start --interval 1 --once
