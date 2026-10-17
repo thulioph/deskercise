@@ -67,6 +67,24 @@ test('wide terminals display exercise instructions alongside timer and actions',
   }
 });
 
+test('extra-wide terminals center a bounded dashboard and keep status text readable', async () => {
+  for (const columns of [166, 240]) {
+    const { stdout, instance } = await screen(columns);
+    try {
+      withinWidth(stdout.frame, columns); completeContent(stdout.frame);
+      const lines = stdout.frame.split('\n');
+      const topBorder = lines.find(line => line.includes('╭'));
+      assert.ok(topBorder, 'Expected a bordered dashboard');
+      const left = topBorder.indexOf('╭');
+      assert.equal(left, (columns - 120) / 2, 'Dashboard should be centered');
+      assert.equal(topBorder.indexOf('╮') - left + 1, 120, 'Dashboard should not fill an extra-wide terminal');
+      assert.ok(lines.some(line => /1\. Sit tall.*Follow the listed/.test(line)));
+      assert.ok(lines.some(line => line.includes('Notification unavailable; return')),
+        'Status column should have enough width for its messages');
+    } finally { instance.unmount(); }
+  }
+});
+
 test('compact terminals stack timer and actions before instructions without losing cautions', async () => {
   for (const columns of [20, 39, 40, 80, 99]) {
     const { stdout, instance } = await screen(columns);
