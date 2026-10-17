@@ -32,16 +32,18 @@ function Status({ snapshot, now }: { snapshot: Snapshot; now: number }) {
 export function TerminalLayout({ snapshot, now }: { snapshot: Snapshot; now: number }) {
   const columns = useTerminalColumns();
   const { view } = snapshot;
-  const bordered = columns >= 40;
-  const padding = columns >= 60 ? 2 : bordered ? 1 : 0;
-  const contentWidth = Math.max(1, columns - (bordered ? 2 : 0) - padding * 2);
+  const layoutWidth = Math.min(columns, 120);
+  const bordered = layoutWidth >= 40;
+  const padding = layoutWidth >= 60 ? 2 : bordered ? 1 : 0;
+  const contentWidth = Math.max(1, layoutWidth - (bordered ? 2 : 0) - padding * 2);
   const showDetails = !!view.exercise && ['prompt', 'exercise'].includes(view.phase);
-  const wide = columns >= 100 && showDetails;
-  const statusWidth = wide ? 28 : contentWidth;
+  const wide = layoutWidth >= 100 && showDetails;
+  const statusWidth = wide ? 36 : contentWidth;
   const title = { waiting: 'Space to focus', prompt: 'Time to move', snoozing: 'A little later', exercise: 'Your movement break', confirm: 'How did it go?', done: 'Session saved' }[view.phase];
 
-  return <Box width={columns} flexDirection="column" paddingX={padding} paddingY={bordered ? 1 : 0}
-    borderStyle={bordered ? 'round' : undefined} borderColor="cyan">
+  return <Box width={columns} justifyContent="center">
+    <Box width={layoutWidth} flexDirection="column" paddingX={padding} paddingY={bordered ? 1 : 0}
+      borderStyle={bordered ? 'round' : undefined} borderColor="cyan">
     <Text bold color="cyan">DESKERCISE {view.demo ? '· DEMO / 5-second test' : '· workplace movement'}</Text>
     <SessionSummary view={view} now={now} />
     <Text bold>{title}</Text>
@@ -57,6 +59,7 @@ export function TerminalLayout({ snapshot, now }: { snapshot: Snapshot; now: num
         <Status snapshot={snapshot} now={now} />
       </Box>
       {!wide && <ExerciseDetails view={view} />}
+    </Box>
     </Box>
   </Box>;
 }
