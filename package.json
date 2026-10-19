@@ -8,7 +8,7 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
-    "provenance": false
+    "provenance": true
   },
   "type": "module",
   "description": "Local-first workplace movement breaks for developers",

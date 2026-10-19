@@ -21,7 +21,7 @@ test('npm publishes the verified tarball publicly and uses latest for a newer ve
   assert.equal(await publishPackage(f.options), 'published');
   assert.equal(f.calls[0]?.command, 'npm');
   assert.deepEqual(f.calls[0]?.args, ['publish', './release/deskercise-0.1.7.tgz', '--access', 'public',
-    '--registry', 'https://registry.npmjs.org/', '--provenance=false', '--tag', 'latest']);
+    '--registry', 'https://registry.npmjs.org/', '--provenance', '--tag', 'latest']);
 });
 
 test('first publication handles an absent package', async () => {
