@@ -1,6 +1,6 @@
 # npm publishing setup
 
-This change prepares **public** npm distribution as `@thulioph/deskercise` while keeping `thulioph/deskercise` private on GitHub. Published JavaScript, the exercise catalog, and package documentation are downloadable by anyone. No npm publication occurs from a draft PR or PR check.
+Both the npm package `@thulioph/deskercise` and the `thulioph/deskercise` GitHub repository are public. Published JavaScript, the exercise catalog, and package documentation are downloadable by anyone. No npm publication occurs from a draft PR or PR check.
 
 ## Confirm the npm account and package name
 
@@ -40,7 +40,7 @@ Open the package's **Settings → Trusted publishing** on npmjs.com and add a **
 
 Recent publisher configurations default to staged publishing; explicitly allow direct publication for the merge-triggered workflow. Create the publisher shortly before merging: a new configuration must complete its first successful publication within two days, or it expires and must be recreated.
 
-The workflow grants `id-token: write` only to the main-branch Release job, uses GitHub-hosted macOS runners and npm 11.21.0, and authenticates through OIDC. It does not require an npm token in GitHub secrets. The package's `repository.url` points to the exact GitHub repository. Provenance is explicitly disabled because npm provenance is unavailable for private source repositories.
+The workflow grants `id-token: write` only to the main-branch Release job, uses GitHub-hosted macOS runners and npm 11.21.0, and authenticates through OIDC. It does not require an npm token in GitHub secrets. The package's `repository.url` points to the exact GitHub repository. Automated publication requests npm provenance for the public source repository. Verify that the published package has an attestation after release; provenance links a package to its build and source, but does not establish that its code is safe.
 
 ## Verify the first automated publication
 
@@ -58,6 +58,7 @@ If publication fails, inspect the Release job. Check the scope owner, publisher 
 
 ## References
 
+- [npm provenance](https://docs.npmjs.com/generating-provenance-statements/)
 - [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/)
 - [Publishing scoped public packages](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/)
 - [2FA for package publishing](https://docs.npmjs.com/requiring-2fa-for-package-publishing-and-settings-modification/)

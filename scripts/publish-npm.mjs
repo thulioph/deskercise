@@ -35,7 +35,7 @@ export async function publishPackage({ manifest, tarball, integrity, fetchMetada
   const latest = metadata?.['dist-tags']?.latest;
   // Serialized release jobs may reach the queue out of commit order.
   const tag = latest && compareVersions(manifest.version, latest) < 0 ? 'previous' : 'latest';
-  publish('npm', ['publish', tarball, '--access', 'public', '--registry', registry, '--provenance=false', '--tag', tag], { stdio: 'inherit' });
+  publish('npm', ['publish', tarball, '--access', 'public', '--registry', registry, '--provenance', '--tag', tag], { stdio: 'inherit' });
   return 'published';
 }
 

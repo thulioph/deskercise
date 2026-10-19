@@ -30,6 +30,8 @@ async function retry(mode: string, npmPublish = false) {
     writeFileSync(path.join(cwd, 'bin/npm'), `#!/usr/bin/env node
 const fs = require('node:fs'); const args = process.argv.slice(2);
 fs.appendFileSync('calls.jsonl', JSON.stringify(['npm', ...args]) + '\\n');
+const credentialNames = ['GH_TOKEN', 'GITHUB_TOKEN', 'NODE_AUTH_TOKEN', 'NPM_TOKEN', 'ACTIONS_ID_TOKEN_REQUEST_URL', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
+if (credentialNames.some(name => process.env[name])) { console.error('Build inherited publication credentials'); process.exit(1); }
 if (args[0] === 'version') fs.writeFileSync('version.txt', args[1]);
 if (args[1] === 'test:package') { fs.mkdirSync('release', {recursive:true}); fs.writeFileSync('release/deskercise-' + fs.readFileSync('version.txt', 'utf8') + '.tgz', 'verified package'); }
 `, { mode: 0o755 });
@@ -44,7 +46,9 @@ if (args[1] === 'view') {
 `, { mode: 0o755 });
     writeFileSync(path.join(cwd, 'scripts/publish-npm.mjs'), `import { appendFileSync } from 'node:fs'; appendFileSync('calls.jsonl', JSON.stringify(['publish-npm', process.env.RELEASE_VERSION, process.env.RELEASE_COMMIT]) + '\\n');`);
     Object.assign(process.env, { PATH: `${cwd}/bin:${saved.PATH}`, RETRY_MODE: mode,
-      GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', RELEASE_COMMIT: git('rev-parse', 'HEAD'), GH_REPO: 'example/deskercise' });
+      GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main', RELEASE_COMMIT: git('rev-parse', 'HEAD'), GH_REPO: 'example/deskercise',
+      GH_TOKEN: 'test-token', GITHUB_TOKEN: 'test-token', NODE_AUTH_TOKEN: 'test-token', NPM_TOKEN: 'test-token',
+      ACTIONS_ID_TOKEN_REQUEST_URL: 'https://example.com', ACTIONS_ID_TOKEN_REQUEST_TOKEN: 'test-token' });
     pluginConfig.npmPublish = npmPublish;
     let error: unknown;
     try { await release({ cwd }); } catch (caught) { error = caught; }

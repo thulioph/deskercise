@@ -4,8 +4,13 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 export function prepare(_config, context) {
   const { cwd, nextRelease } = context;
+  // Build and package installation do not need publication credentials. This
+  // limits accidental inheritance; it does not isolate them from the job.
+  const buildEnv = { ...process.env };
+  for (const name of ['GH_TOKEN', 'GITHUB_TOKEN', 'NODE_AUTH_TOKEN', 'NPM_TOKEN',
+    'ACTIONS_ID_TOKEN_REQUEST_URL', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN']) delete buildEnv[name];
   const run = (command, args, env = {}) => execFileSync(command, args, {
-    cwd, stdio: 'inherit', env: { ...process.env, ...env },
+    cwd, stdio: 'inherit', env: { ...buildEnv, ...env },
   });
   run('npm', ['version', nextRelease.version, '--no-git-tag-version', '--allow-same-version', '--ignore-scripts']);
   run('npm', ['run', 'build']);
