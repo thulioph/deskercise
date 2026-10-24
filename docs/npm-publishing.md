@@ -40,7 +40,11 @@ Open the package's **Settings → Trusted publishing** on npmjs.com and add a **
 
 Recent publisher configurations default to staged publishing; explicitly allow direct publication for the merge-triggered workflow. Create the publisher shortly before merging: a new configuration must complete its first successful publication within two days, or it expires and must be recreated.
 
-The workflow grants `id-token: write` only to the main-branch Release job, uses GitHub-hosted macOS runners and npm 11.21.0, and authenticates through OIDC. It does not require an npm token in GitHub secrets. The package's `repository.url` points to the exact GitHub repository. Automated publication requests npm provenance for the public source repository. Verify that the published package has an attestation after release; provenance links a package to its build and source, but does not establish that its code is safe.
+The workflow grants `id-token: write` to the main-branch Release job and to the on-demand `validate-publish` job, uses GitHub-hosted macOS runners and npm 11.21.0, and authenticates through OIDC. It does not require an npm token in GitHub secrets. The package's `repository.url` points to the exact GitHub repository. Automated publication requests npm provenance through the package's `publishConfig.provenance` (no CLI flag), for the public source repository. Verify that the published package has an attestation after release; provenance links a package to its build and source, but does not establish that its code is safe.
+
+## Validate the publish path before merging
+
+After configuring the trusted publisher, run the **Actions → CI → Run workflow** dispatch before merging. The `validate-publish` job checks the two things a dry run can verify: that the `id-token: write` grant mints an OIDC token, and that the built tarball is publishable (`npm publish --dry-run`). npm's dry run does not exercise the OIDC/provenance path, so the npm trusted-publisher authorization itself is only proven by the first real Release, which can be resumed on retry.
 
 ## Verify the first automated publication
 
