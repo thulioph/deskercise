@@ -96,6 +96,45 @@ jobs:
           fi
           npm publish ./release/deskercise-*.tgz --dry-run --access public --provenance=false
 
+  validate-publish:
+    name: Validate publish path
+    # On-demand pre-merge check of the trusted-publishing plumbing that a real
+    # release will use. npm's --dry-run does not exercise the OIDC/provenance
+    # path, so this verifies the two things that are checkable without doing a
+    # real publication: that the id-token grant works and that the tarball is
+    # publishable. npm's trusted-publisher authorization is only proven by the
+    # first real release (which the Release job can resume on retry).
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+      - name: Install dependencies
+        run: npm ci
+      - name: Build and pack the package
+        run: npm run test:package
+        env:
+          PACKAGE_DIRECTORY: release
+      - name: Request the OIDC token trusted publishing uses
+        run: |
+          token=$(curl -fsSL "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm" \
+            -H "authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>process.stdout.write(JSON.parse(s).value || ''))")
+          test -n "$token" && echo "Minted an OIDC token for npm (${#token} characters)."
+      - name: Verify the tarball publishes without publishing
+        run: npm publish ./release/deskercise-*.tgz --dry-run --access public
+
   release:
     name: Release
     needs: [commits, tests, build]
