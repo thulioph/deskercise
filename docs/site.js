@@ -1,152 +1,262 @@
-const installCmd = document.getElementById("install-cmd");
-const copyStatus = document.getElementById("copy-status");
-const copyStatusCommands = document.getElementById("copy-status-commands");
-const installPanel = document.getElementById("install-cmd-panel");
-const installTabs = Array.from(document.querySelectorAll(".install-tab"));
-const copyButtons = Array.from(document.querySelectorAll(".copy-cmd, #copy-install"));
+// Deskercise landing page interactions: benefit-card reveal,
+// interactive terminal demo, and install tabs / copy buttons.
+(function () {
+  "use strict";
 
-function selectCommandText(codeEl) {
-  if (!codeEl) return;
-  const range = document.createRange();
-  range.selectNodeContents(codeEl);
-  const selection = window.getSelection();
-  selection?.removeAllRanges();
-  selection?.addRange(range);
-}
+  document.documentElement.classList.add("js");
 
-function statusForButton(button) {
-  if (button.id === "copy-install" || button.closest(".chapel-install")) {
-    return copyStatus;
-  }
-  return copyStatusCommands;
-}
+  var reduceMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function resetCopyButton(button) {
-  button.dataset.copied = "false";
-  button.textContent = "Copy";
-}
-
-function resetAllCopyButtons() {
-  for (const button of copyButtons) {
-    resetCopyButton(button);
-  }
-  if (copyStatus) copyStatus.textContent = "";
-  if (copyStatusCommands) copyStatusCommands.textContent = "";
-}
-
-function codeForButton(button) {
-  const targetId = button.getAttribute("data-copy-target");
-  if (targetId) return document.getElementById(targetId);
-  if (button.id === "copy-install") return installCmd;
-  return button.previousElementSibling?.tagName === "CODE"
-    ? button.previousElementSibling
-    : null;
-}
-
-async function copyFromButton(button) {
-  const codeEl = codeForButton(button);
-  const statusEl = statusForButton(button);
-  const text = codeEl?.textContent?.trim() ?? "";
-
-  try {
-    await navigator.clipboard.writeText(text);
-    for (const other of copyButtons) {
-      if (other !== button) resetCopyButton(other);
+  /* ----- Benefit cards: reveal on scroll ----- */
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".card"));
+  if (cards.length > 0) {
+    if ("IntersectionObserver" in window && !reduceMotion) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in");
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      cards.forEach(function (card, i) {
+        card.style.transitionDelay = i * 70 + "ms";
+        io.observe(card);
+      });
+    } else {
+      cards.forEach(function (card) {
+        card.classList.add("in");
+      });
     }
-    if (copyStatus && statusEl !== copyStatus) copyStatus.textContent = "";
-    if (copyStatusCommands && statusEl !== copyStatusCommands) {
-      copyStatusCommands.textContent = "";
+  }
+
+  /* ----- Interactive terminal demo ----- */
+  var term = document.getElementById("term");
+  var body = document.getElementById("term-body");
+
+  if (term && body && !reduceMotion) {
+    var caret = '<span class="term-caret"></span>';
+    var mode = "idle";
+
+    function print(text, cls) {
+      var el = document.createElement("div");
+      el.className = "tl" + (cls ? " " + cls : "");
+      el.innerHTML = text;
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+      return el;
     }
 
-    button.dataset.copied = "true";
-    button.textContent = "Copied";
-    if (statusEl) statusEl.textContent = "Copied";
-    window.setTimeout(() => {
-      if (button.dataset.copied === "true") {
-        resetCopyButton(button);
-        if (statusEl) statusEl.textContent = "";
+    function clearLines() {
+      while (body.firstChild) {
+        body.removeChild(body.firstChild);
       }
-    }, 1600);
-  } catch {
-    selectCommandText(codeEl);
-    button.textContent = "Copy";
-    if (statusEl) {
-      statusEl.textContent = "Select the command and copy it manually";
     }
-  }
-}
 
-function selectInstaller(tab) {
-  if (!tab || !installCmd || !installPanel) return;
+    function headerSync() {
+      var el = document.createElement("div");
+      el.className = "tl key";
+      el.textContent = "$ deskercise start";
+      body.appendChild(el);
+    }
 
-  const command = tab.dataset.cmd?.trim() ?? "";
-  installCmd.textContent = command;
-  installPanel.setAttribute("aria-labelledby", tab.id);
-
-  for (const item of installTabs) {
-    const selected = item === tab;
-    item.setAttribute("aria-selected", selected ? "true" : "false");
-    item.tabIndex = selected ? 0 : -1;
-  }
-
-  resetAllCopyButtons();
-}
-
-if (installTabs.length > 0) {
-  for (const tab of installTabs) {
-    tab.addEventListener("click", () => {
-      selectInstaller(tab);
-      tab.focus();
-    });
-
-    tab.addEventListener("keydown", (event) => {
-      const index = installTabs.indexOf(tab);
-      if (index < 0) return;
-
-      let nextIndex = -1;
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        nextIndex = (index + 1) % installTabs.length;
-      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-        nextIndex = (index - 1 + installTabs.length) % installTabs.length;
-      } else if (event.key === "Home") {
-        nextIndex = 0;
-      } else if (event.key === "End") {
-        nextIndex = installTabs.length - 1;
-      }
-
-      if (nextIndex < 0) return;
-      event.preventDefault();
-      const next = installTabs[nextIndex];
-      selectInstaller(next);
-      next.focus();
-    });
-  }
-}
-
-for (const button of copyButtons) {
-  button.addEventListener("click", () => {
-    void copyFromButton(button);
-  });
-}
-
-const ritual = document.getElementById("ritual");
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-if (ritual) {
-  if (reduceMotion || !("IntersectionObserver" in window)) {
-    ritual.classList.add("is-in");
-  } else {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-in");
-            io.unobserve(entry.target);
-          }
+    function typeHeader(cb) {
+      var el = document.createElement("div");
+      el.className = "tl key";
+      el.textContent = "$ ";
+      body.appendChild(el);
+      var word = "deskercise start";
+      var i = 0;
+      var iv = window.setInterval(function () {
+        el.textContent = "$ " + word.slice(0, ++i);
+        if (i >= word.length) {
+          window.clearInterval(iv);
+          if (cb) cb();
         }
-      },
-      { threshold: 0.2, rootMargin: "0px 0px -5% 0px" }
-    );
-    io.observe(ritual);
+      }, 45);
+    }
+
+    function waiting() {
+      mode = "idle";
+      clearLines();
+      headerSync();
+      print("waiting 45m …" + caret, "dim");
+      window.setTimeout(function () {
+        if (mode === "idle") {
+          breakScreen();
+        }
+      }, 1500);
+    }
+
+    function boot() {
+      mode = "idle";
+      clearLines();
+      typeHeader(function () {
+        if (mode !== "idle") return;
+        print("waiting 45m …" + caret, "dim");
+        window.setTimeout(function () {
+          if (mode === "idle") {
+            breakScreen();
+          }
+        }, 1500);
+      });
+    }
+
+    function breakScreen() {
+      mode = "break";
+      clearLines();
+      headerSync();
+      print("Break · Gentle neck turns", "hl");
+      print("  [1] start   [2] skip   [3] snooze" + caret, "key");
+    }
+
+    function pauseThenReset(text, cls) {
+      mode = "pause";
+      clearLines();
+      headerSync();
+      print(text, cls);
+      window.setTimeout(function () {
+        if (mode === "pause") {
+          waiting();
+        }
+      }, 1500);
+    }
+
+    // Demo countdown runs faster than the real 60 seconds so visitors
+    // can experience the full start → confirm loop in a few seconds.
+    function startCountdown() {
+      mode = "count";
+      clearLines();
+      headerSync();
+      print("Break · Gentle neck turns", "hl");
+      var timerLine = print("");
+      print("  sit upright · look gently left, then right", "dim");
+      var t = 60;
+      var iv = window.setInterval(function () {
+        t--;
+        if (t <= 0) {
+          window.clearInterval(iv);
+          timerLine.innerHTML = "&#9654; 0:00";
+          mode = "confirm";
+          print("Completed?  [y] / [n]" + caret, "hl");
+          return;
+        }
+        timerLine.innerHTML = "&#9654; 0:" + (t < 10 ? "0" + t : t);
+      }, 70);
+    }
+
+    function onKey(e) {
+      if (document.activeElement !== term) return;
+      var k = e.key.toLowerCase();
+
+      if (mode === "break") {
+        if (k === "1") {
+          e.preventDefault();
+          startCountdown();
+        } else if (k === "2") {
+          e.preventDefault();
+          pauseThenReset("  skipped — next break in 45m", "dim");
+        } else if (k === "3") {
+          e.preventDefault();
+          pauseThenReset("  snoozed — same exercise returns in 10m", "dim");
+        }
+      } else if (mode === "count") {
+        if (k === "s") {
+          e.preventDefault();
+          pauseThenReset("stopped early — no minutes added", "dim");
+        }
+      } else if (mode === "confirm") {
+        if (k === "y") {
+          e.preventDefault();
+          pauseThenReset("&#10003; completed — 60 seconds confirmed", "hl");
+        } else if (k === "n") {
+          e.preventDefault();
+          pauseThenReset("unconfirmed — no minutes added", "dim");
+        }
+      }
+    }
+
+    term.addEventListener("keydown", onKey);
+    term.addEventListener("click", function () {
+      term.focus();
+    });
+    boot();
   }
-}
+
+  /* ----- Install tabs + copy ----- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var cmdEl = document.getElementById("install-cmd");
+  var copyBtn = document.getElementById("copy-btn");
+
+  var commands = {
+    npm: "npm install --global @thulioph/deskercise",
+    pnpm: "pnpm add --global @thulioph/deskercise",
+    yarn: "yarn global add @thulioph/deskercise",
+    bun: "bun add --global @thulioph/deskercise",
+  };
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      tabs.forEach(function (t) {
+        t.classList.remove("active");
+        t.setAttribute("aria-selected", "false");
+      });
+      tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+      var pm = tab.getAttribute("data-pm");
+      if (cmdEl && commands[pm]) {
+        cmdEl.textContent = commands[pm];
+      }
+      if (copyBtn) {
+        copyBtn.textContent = "copy";
+        copyBtn.classList.remove("done");
+      }
+    });
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch (e) {
+      ok = false;
+    }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var text = cmdEl ? cmdEl.textContent.trim() : commands.npm;
+      var done = function () {
+        copyBtn.textContent = "copied ✓";
+        copyBtn.classList.add("done");
+        window.setTimeout(function () {
+          copyBtn.textContent = "copy";
+          copyBtn.classList.remove("done");
+        }, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(text)
+          .then(done)
+          .catch(function () {
+            if (fallbackCopy(text)) done();
+          });
+      } else if (fallbackCopy(text)) {
+        done();
+      }
+    });
+  }
+})();
