@@ -12,6 +12,8 @@
   },
   "type": "module",
   "description": "Local-first workplace movement breaks for developers",
+  "license": "GPL-3.0-or-later",
+  "author": "Thulio Philipe <thulioph@gmail.com>",
   "bin": {
     "deskercise": "dist/index.js"
   },
