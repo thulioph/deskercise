@@ -141,7 +141,7 @@ Without a global link, use `node dist/index.js` instead of `deskercise`.
 5. End a run with `Ctrl+C` and check the report again.
 6. Run `deskercise start --interval 1 --once` for a real 60-second break.
 
-If notifications do not appear, check macOS notification permissions and Focus settings. The app uses `node-notifier` / `terminal-notifier`; delivery depends on the OS version. The terminal flow continues if notifications fail. If the browser does not open, use the `report.html` path printed in the terminal.
+If notifications do not appear, check macOS notification permissions and Focus settings. The app delivers notifications through macOS's built-in AppleScript facade (`osascript`); delivery depends on the OS version. The terminal flow continues if notifications fail. If the browser does not open, use the `report.html` path printed in the terminal.
 
 If `better-sqlite3` fails to compile, install Xcode command line tools (`xcode-select --install`) and retry `npm ci`.
 

@@ -41,7 +41,6 @@
     "chart.js": "^4.5.0",
     "commander": "^14.0.0",
     "ink": "^6.0.0",
-    "node-notifier": "^10.0.1",
     "react": "^19.0.0"
   },
   "devDependencies": {
@@ -51,7 +50,6 @@
     "@semantic-release/release-notes-generator": "14.1.1",
     "@types/better-sqlite3": "^7.6.0",
     "@types/node": "^22.0.0",
-    "@types/node-notifier": "^8.0.0",
     "@types/react": "^19.0.0",
     "conventional-changelog-conventionalcommits": "9.3.0",
     "husky": "9.1.7",
