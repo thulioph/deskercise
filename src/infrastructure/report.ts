@@ -69,98 +69,206 @@ export function writeReport(report: Report, filename: string, demo: boolean) {
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Deskercise · ${demo ? 'Demo ' : ''}Movement report</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f6f7f2;color:#17382e;font:16px/1.6 system-ui,sans-serif;color-scheme:light}
-main{max-width:1100px;margin:auto;padding:48px 24px 80px}
-.top{display:flex;justify-content:space-between;align-items:center;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-.badge{border:1px solid #c9d8ce;border-radius:20px;padding:5px 14px}
-h1{font-size:clamp(36px,6vw,60px);line-height:1.1;letter-spacing:-.04em;margin:36px 0 14px;text-wrap:balance}
-h2{font-size:17px;margin:0 0 6px}p,.muted,.subtitle{color:#3f5c52}
-.subtitle{margin:0 0 16px;font-size:13px;line-height:1.45}
-.progress-narrative{margin:30px 0}
-.progress-narrative .narrative{margin:0;font-size:clamp(18px,2.4vw,22px);line-height:1.55;color:#17382e;text-wrap:pretty}
-.progress-narrative .narrative strong{font-variant-numeric:tabular-nums}
-.progress-narrative #period{margin:12px 0 0;font-size:13px;color:#3f5c52}
-.chart{min-width:0;background:#fff;border:1px solid #e0e7dc;border-radius:16px;padding:24px}
-.charts{display:grid;grid-template-columns:2fr 1fr;gap:16px}.plot{height:270px;position:relative}.wide{grid-column:1/-1}
-.tog{display:inline-flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}
-button{background:#17382e;color:#fff;border:0;padding:10px 18px;border-radius:24px;cursor:pointer}
-button:hover{background:#234a3d}button[aria-pressed=true]{background:#6a8762}
-button:focus-visible{outline:3px solid #17382e;outline-offset:3px}
-table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
-th,td{padding:12px;text-align:left;border-bottom:1px solid #e0e7dc}caption{text-align:left;font-weight:600;margin:0 0 12px;color:#17382e}
-.donut-wrap{position:relative;max-width:560px;margin:0 auto;height:100%}
-.donut-center{position:absolute;inset:0;right:28%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
-.donut-center strong{font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}
-.donut-center span{font-size:13px;color:#3f5c52}
-.bars{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.bars li{display:grid;grid-template-columns:minmax(72px,1fr) 3fr auto;gap:10px;align-items:center}
-.bar-track{height:10px;background:#e0e7dc;border-radius:999px;overflow:hidden}
-.bar-fill{display:block;height:100%;background:#6a8762;border-radius:999px}
-.bar-value{font-variant-numeric:tabular-nums;white-space:nowrap}
+:root{
+  --paper:#e6ebe7;
+  --ink:#14261f;
+  --mist:#f4f6f3;
+  --moss:#5f7a58;
+  --mute:#4a6358;
+  --rule:#c5d0c6;
+  --font-sans:system-ui,-apple-system,"Segoe UI","Helvetica Neue",sans-serif;
+  --font-mono:ui-monospace,"SF Mono","JetBrains Mono","Fira Code",monospace;
+  --prose:52rem;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:light;scroll-behavior:smooth}
+body{
+  margin:0;min-height:100%;background:var(--paper);color:var(--ink);
+  font-family:var(--font-sans);font-size:1.0625rem;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+:focus-visible{outline:2px solid var(--moss);outline-offset:3px}
+main{width:min(80vw,96rem);margin:0 auto;padding:clamp(2.5rem,7vw,5.5rem) 1.25rem 5rem}
+
+/* Masthead */
+.masthead{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;
+  padding-bottom:1rem;border-bottom:1px solid var(--rule);
+  font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);
+}
+.masthead .wordmark{color:var(--ink);font-weight:600}
+.masthead .badge{border:1px solid var(--rule);border-radius:2px;padding:.28rem .6rem;color:var(--ink);text-transform:lowercase;letter-spacing:.02em}
+
+/* Hero */
+.hero{margin:clamp(3rem,8vh,5rem) 0 clamp(2.5rem,6vh,3.5rem)}
+.hero .kicker{margin:0 0 1.5rem;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--moss)}
+h1{margin:0;font-size:clamp(2.75rem,8.5vw,4.75rem);font-weight:700;line-height:1;letter-spacing:-.035em;text-wrap:balance}
+h1 .tone{color:var(--moss);font-weight:500}
+
+/* Narrative / lede */
+.lede{margin:0 0 clamp(3rem,7vh,4.5rem)}
+.lede .narrative{margin:0;max-width:var(--prose);font-size:clamp(1.4rem,3vw,1.85rem);line-height:1.45;letter-spacing:-.01em;text-wrap:pretty;color:var(--ink)}
+.narrative strong{
+  font-family:var(--font-mono);font-weight:500;font-size:1.16em;font-variant-numeric:tabular-nums;
+  color:var(--moss);letter-spacing:-.01em;padding:0 .04em;
+}
+
+/* Ritual */
+.ritual{margin:2.25rem 0 0;padding:1rem 1.25rem;max-width:var(--prose);background:var(--mist);border:1px solid var(--rule);border-radius:2px}
+.ritual-log{margin:0;font-family:var(--font-mono);font-size:.82rem;line-height:1.6;color:var(--ink);white-space:nowrap;overflow-x:auto}
+.ritual-log .prompt{color:var(--moss);font-weight:500}
+.ritual-log #period{color:var(--mute)}
+.ritual-log .cursor{color:var(--moss)}
+
+/* Sections */
+.section{margin-top:clamp(2.5rem,6vh,3.5rem)}
+.section-head{padding-top:clamp(2.5rem,6vh,3.5rem);border-top:1px solid var(--rule)}
+.section h2{margin:0 0 .7rem;font-size:clamp(1.3rem,2.6vw,1.7rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;text-wrap:pretty}
+.section h2::after{content:"";display:block;width:2.25rem;height:3px;margin-top:.6rem;background:var(--moss)}
+.subtitle{margin:0 0 1.5rem;max-width:var(--prose);color:var(--mute);font-size:1.02rem;text-wrap:pretty}
+.muted{color:var(--mute)}
+
+/* Toggle */
+.tog{display:inline-flex;gap:0;margin:0 0 1.5rem;border:1px solid var(--ink);border-radius:2px;overflow:hidden}
+button{appearance:none;background:transparent;color:var(--mute);border:0;border-right:1px solid var(--rule);padding:.55rem 1.05rem;font-family:var(--font-mono);font-size:.8rem;font-weight:500;letter-spacing:.02em;cursor:pointer}
+button:hover{color:var(--ink);background:rgba(20,38,31,.05)}
+button[aria-pressed="true"]{color:var(--mist);background:var(--ink)}
+button:last-child{border-right:0}
+
+/* Plot */
+.plot{position:relative;height:300px}
+
+/* Bars */
+.bars{list-style:none;margin:0;padding:0;display:grid;gap:1.05rem}
+.bars li{display:grid;grid-template-columns:8rem 1fr auto;gap:1rem;align-items:center}
+.bar-label{font-family:var(--font-mono);font-size:.85rem;color:var(--ink);white-space:nowrap}
+.bar-track{height:.5rem;background:var(--rule);border-radius:2px;overflow:hidden}
+.bar-fill{display:block;height:100%;background:var(--moss);border-radius:2px}
+.bar-value{font-family:var(--font-mono);font-size:.85rem;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap;text-align:right}
+
+/* Donut */
+.donut-wrap{position:relative;max-width:40rem;margin:1.5rem auto 0;height:300px}
+.donut-center{position:absolute;inset:0;right:24%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center}
+.donut-center strong{font-family:var(--font-mono);font-size:2.6rem;font-weight:500;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.donut-center span{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-top:.35rem}
+
+/* Tables */
+table{border-collapse:collapse;width:100%;font-size:.95rem;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0 0 1.1rem}
+th,td{padding:.8rem .75rem;text-align:left;border-bottom:1px solid var(--rule)}
+th{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--mute)}
+td{color:var(--ink)}
+
+/* Ledger — Per-exercise */
+.ledger thead th{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding-top:.7rem}
+.ledger tbody tr:last-child td{border-bottom:2px solid var(--ink)}
+.ledger td:first-child{font-weight:500}
+.ledger td:nth-child(2){font-family:var(--font-mono);font-size:.8rem;color:var(--mute)}
+.ledger th:nth-child(3),.ledger td:nth-child(3),
+.ledger th:nth-child(4),.ledger td:nth-child(4){text-align:right}
+.ledger tbody tr:hover{background:var(--mist)}
+
+/* Footer */
+footer{padding-top:clamp(2.5rem,6vh,3.5rem);margin-top:clamp(2.5rem,6vh,3.5rem);border-top:1px solid var(--rule)}
+.footer-top{margin-bottom:1.4rem;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:600}
+footer .footer-lead{margin:0;max-width:var(--prose);font-size:.9rem;line-height:1.5;color:var(--ink)}
+footer .footer-meta{margin:.85rem 0 0;max-width:var(--prose);font-size:.78rem;line-height:1.6;color:var(--mute)}
+
+/* Accessible hiding */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 #mode-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-footer{margin:40px auto 0;max-width:42rem;text-align:center;color:#3f5c52}
-footer .footer-lead{margin:0;font-size:13px;line-height:1.5;color:#17382e}
-footer .footer-meta{margin:10px 0 0;font-size:12px;line-height:1.5}
-@media(max-width:700px){.charts{grid-template-columns:1fr}th,td{font-size:12px;padding:8px 4px}.chart{padding:16px}.bars li{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-@media print{body{background:#fff}.plot,canvas,.tog{display:none!important}.chart{break-inside:avoid;border-color:#ccc}
-.sr-only.print-show{position:static;width:auto;height:auto;padding:0;margin:24px 0 0;overflow:visible;clip:auto;white-space:normal;border:0}}
+
+@media(max-width:700px){
+  main{width:100%}
+  .plot{height:240px}
+  .bars li{grid-template-columns:7rem 1fr auto;gap:.75rem}
+  .donut-wrap{max-width:100%;height:280px}
+  th,td{font-size:.8rem;padding:.7rem .3rem}
+  .ritual-log{white-space:pre-wrap}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+@media print{
+  body{background:#fff;color:#000;font-size:12px}
+  main{display:block;width:auto;max-width:none;padding:0}
+  .masthead,.footer-top,.ritual,.tog,.cursor,.hero .kicker{display:none!important}
+  h1{font-size:1.9rem;margin:0 0 1.2rem}
+  .lede .narrative{font-size:1rem}
+  .narrative strong{font-size:1em;color:#000}
+  .plot,.donut-wrap,canvas,.donut-center{display:none!important}
+  .section{margin-top:1.4rem;break-inside:avoid}
+  .section-head{padding-top:1.4rem;border-top-color:#aaa}
+  .sr-only.print-show{position:static;width:auto;height:auto;padding:0;margin:1.4rem 0 0;overflow:visible;clip:auto;white-space:normal;border:0}
+}
 </style></head><body><main id="main">
-<div class="top"><strong>Deskercise / ${demo ? 'Demo report' : 'Movement report'}</strong><span class="badge">Local · offline</span></div>
-<h1>Small breaks.<br>A little more movement.</h1>
+<header class="masthead"><span><span class="wordmark">Deskercise</span> / ${demo ? 'Demo report' : 'Movement report'}</span><span class="badge">Local · offline</span></header>
+<header class="hero">
+<p class="kicker">A letter to this week</p>
+<h1>Small breaks.<br><span class="tone">a little more movement.</span></h1>
+</header>
 <p class="sr-only" id="mode-live" aria-live="polite"></p>
-<section class="progress-narrative" aria-labelledby="summary-heading">
+<section class="lede" aria-labelledby="summary-heading">
 <h2 id="summary-heading" class="sr-only">Summary</h2>
 <p class="narrative">${narrative}</p>
-<p id="period"></p>
+<div class="ritual"><p class="ritual-log"><span class="prompt">$</span> deskercise report <span id="period"></span><span class="cursor" aria-hidden="true">▌</span></p></div>
 </section>
-<div class="charts">
-<section class="chart" aria-labelledby="daily-heading">
+<section class="section" aria-labelledby="daily-heading">
+<div class="section-head">
 <h2 id="daily-heading">Daily movement</h2>
 <p class="subtitle">How much confirmed movement did you get each day?</p>
 <div class="tog" role="group" aria-label="Daily movement units">
 <button type="button" id="minutes" aria-pressed="true">Minutes</button>
 <button type="button" id="breaks" aria-pressed="false">Breaks</button>
 </div>
+</div>
 <div class="plot"><canvas id="activity" role="img" aria-label="Daily movement chart" aria-describedby="daily-table"></canvas></div>
-</section>
-<section class="chart" aria-labelledby="parts-heading">
-<h2 id="parts-heading">Body area</h2>
-<p class="subtitle">Which body areas got the most completed breaks?</p>
-<ul class="bars" aria-label="Completed breaks by body area">${bodyBars}</ul>
-</section>
-<section class="chart wide" aria-labelledby="trend-heading">
-<h2 id="trend-heading">Completion rate · by day</h2>
-<p class="subtitle">How often did you finish the breaks you were prompted for?</p>
-<div class="plot"><canvas id="trend" role="img" aria-label="Daily completion rate chart" aria-describedby="daily-table"></canvas></div>
-</section>
 <div class="sr-only print-show">
 <table id="daily-table"><caption>Daily activity totals for the report period</caption>
 <thead><tr><th scope="col">Day</th><th scope="col">Prompted</th><th scope="col">Completed</th><th scope="col">Minutes</th><th scope="col">Rate</th></tr></thead>
 <tbody>${dayRows}</tbody></table>
 </div>
-<section class="chart wide" aria-labelledby="outcomes-heading">
+</section>
+<section class="section" aria-labelledby="parts-heading">
+<div class="section-head">
+<h2 id="parts-heading">Body area</h2>
+<p class="subtitle">Which body areas got the most completed breaks?</p>
+</div>
+<ul class="bars" aria-label="Completed breaks by body area">${bodyBars}</ul>
+</section>
+<section class="section" aria-labelledby="trend-heading">
+<div class="section-head">
+<h2 id="trend-heading">Completion rate · by day</h2>
+<p class="subtitle">How often did you finish the breaks you were prompted for?</p>
+</div>
+<div class="plot"><canvas id="trend" role="img" aria-label="Daily completion rate chart" aria-describedby="daily-table"></canvas></div>
+</section>
+<section class="section" aria-labelledby="outcomes-heading">
+<div class="section-head">
 <h2 id="outcomes-heading">Outcomes</h2>
 <p class="subtitle">How did prompts end — completed, skipped, expired, or otherwise?</p>
+</div>
 ${outcomeTotal === 0
   ? '<p class="muted">No prompted exercises in this period.</p>'
-  : `<div class="plot"><div class="donut-wrap"><canvas id="outcomes" role="img" aria-label="Prompt outcomes doughnut chart" aria-describedby="outcomes-table"></canvas><div class="donut-center" aria-hidden="true"><strong>${outcomeTotal}</strong><span>prompts</span></div></div></div>`}
+  : `<div class="donut-wrap"><canvas id="outcomes" role="img" aria-label="Prompt outcomes doughnut chart" aria-describedby="outcomes-table"></canvas><div class="donut-center" aria-hidden="true"><strong>${outcomeTotal}</strong><span>prompts</span></div></div>`}
 <div class="sr-only print-show">
 <table id="outcomes-table"><caption>Prompt outcomes for the report period</caption>
 <thead><tr><th scope="col">Outcome</th><th scope="col">Count</th></tr></thead>
 <tbody>${outcomeRows}</tbody></table>
 </div>
 </section>
-<section class="chart wide" aria-labelledby="exercises-heading">
+<section class="section" aria-labelledby="exercises-heading">
+<div class="section-head">
 <h2 id="exercises-heading">Per-exercise</h2>
 <p class="subtitle">Which exercises did you complete, and for how long on average?</p>
-<table><caption>Completed exercises in the report period</caption>
+</div>
+<table class="ledger"><caption>Completed exercises in the report period</caption>
 <thead><tr><th scope="col">Exercise</th><th scope="col">Body area</th><th scope="col">Completions</th><th scope="col">Avg seconds</th></tr></thead>
 <tbody>${exerciseRows}</tbody></table>
 </section>
-</div>
 <footer>
+<div class="footer-top">Deskercise</div>
 <p class="footer-lead">This file contains a snapshot of your local data. No analytics, external fonts or network requests.</p>
 <p class="footer-meta">Minutes use timer duration only for user-confirmed completions. This is a habit log, not a measurement of physical activity. Days group by first prompt in your current local timezone; the period includes today and six previous calendar days.</p>
 </footer>
@@ -171,13 +279,13 @@ const short=new Intl.DateTimeFormat(undefined,{month:'short',day:'numeric'});
 const tipDay=new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short'});
 const dayLabels=r.days.map(d=>short.format(new Date(d.date+'T12:00:00')));
 document.getElementById('period').textContent=fmt.format(new Date(r.days[0].date+'T12:00:00'))+' — '+fmt.format(new Date(r.days[6].date+'T12:00:00'));
-Chart.defaults.font.family='system-ui';Chart.defaults.color='#3f5c52';Chart.defaults.animation=false;
-const ink='#17382e', moss='#6a8762', mossMuted='#c7d8b6', grid='#e0e7dc', tipBg='#17382e';
-const tipBase={backgroundColor:tipBg,titleColor:'#fff',bodyColor:'#e8efe6',borderColor:'#6a8762',borderWidth:1,cornerRadius:10,padding:12,displayColors:false,
+Chart.defaults.font.family='ui-monospace,"SF Mono","Menlo",monospace';Chart.defaults.color='#4a6358';Chart.defaults.animation=false;
+const ink='#14261f', moss='#5f7a58', mossMuted='#cdd6c3', mossDark='#4a604d', mossMutedDark='#b7c6a4', grid='#c5d0c6', mute='#4a6358', tipBg='#14261f', paper='#e6ebe7';
+const tipBase={backgroundColor:tipBg,titleColor:'#f4f6f3',bodyColor:'#e6ebe7',borderColor:moss,borderWidth:1,cornerRadius:4,padding:12,displayColors:false,
   titleFont:{weight:'600'},callbacks:{title(items){const i=items[0]?.dataIndex;return i==null?'':tipDay.format(new Date(r.days[i].date+'T12:00:00'));}}};
 const scalesBase={
-  x:{grid:{display:false},border:{display:false},ticks:{padding:8,color:'#3f5c52'}},
-  y:{beginAtZero:true,grace:'8%',border:{display:false},grid:{color:grid,drawTicks:false},ticks:{padding:10,color:'#3f5c52'}}
+  x:{grid:{display:false},border:{display:false},ticks:{padding:8,color:mute}},
+  y:{beginAtZero:true,grace:'8%',border:{display:false},grid:{color:grid,drawTicks:false},ticks:{padding:10,color:mute}}
 };
 const common={responsive:true,maintainAspectRatio:false,layout:{padding:{top:8,right:8,bottom:0,left:0}},
   interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:tipBase},scales:scalesBase};
@@ -188,14 +296,14 @@ function withLabel(labelFn){
 const minuteVals=r.days.map(d=>d.seconds/60);
 const promptedVals=r.days.map(d=>d.prompted);
 const completedVals=r.days.map(d=>d.completed);
-const barGeom={borderRadius:8,borderSkipped:false,maxBarThickness:28,categoryPercentage:0.75,barPercentage:0.9};
+const barGeom={borderRadius:2,borderSkipped:false,maxBarThickness:28,categoryPercentage:0.75,barPercentage:0.9};
 function minutesDatasets(){
-  return [{label:'Minutes',data:minuteVals,backgroundColor:barColors(minuteVals),...barGeom,maxBarThickness:36}];
+  return [{label:'Minutes',data:minuteVals,backgroundColor:barColors(minuteVals),hoverBackgroundColor:mossDark,...barGeom,maxBarThickness:36}];
 }
 function breaksDatasets(){
   return [
-    {label:'Prompted',data:promptedVals,backgroundColor:mossMuted,...barGeom},
-    {label:'Completed',data:completedVals,backgroundColor:moss,...barGeom}
+    {label:'Prompted',data:promptedVals,backgroundColor:mossMuted,hoverBackgroundColor:mossMutedDark,...barGeom},
+    {label:'Completed',data:completedVals,backgroundColor:moss,hoverBackgroundColor:mossDark,...barGeom}
   ];
 }
 const activity=new Chart(document.getElementById('activity'),{
@@ -212,10 +320,10 @@ const trendData=r.days.map(d=>d.prompted?d.completed/d.prompted*100:null);
 new Chart(document.getElementById('trend'),{
   type:'line',
   data:{labels:dayLabels,datasets:[{
-    label:'Completion %',data:trendData,borderColor:ink,backgroundColor:'rgba(106,135,98,0.18)',fill:true,
+    label:'Completion %',data:trendData,borderColor:ink,backgroundColor:'rgba(95,122,88,.16)',fill:true,
     borderWidth:2,spanGaps:true,cubicInterpolationMode:'monotone',
     pointRadius:function(ctx){return trendData[ctx.dataIndex]==null?0:4;},
-    pointHoverRadius:6,pointBackgroundColor:ink,pointBorderColor:'#fff',pointBorderWidth:2,
+    pointHoverRadius:6,pointBackgroundColor:ink,pointBorderColor:paper,pointBorderWidth:2,
     segment:{borderColor:function(ctx){
       const a=ctx.p0.parsed.y, b=ctx.p1.parsed.y;
       return a==null||b==null?mossMuted:ink;
@@ -242,7 +350,7 @@ function mode(useMinutes){
   activity.data.datasets=useMinutes?minutesDatasets():breaksDatasets();
   activity.options.plugins.legend.display=!useMinutes;
   activity.options.plugins.legend.position='bottom';
-  activity.options.plugins.legend.labels={boxWidth:12,boxHeight:12,padding:16,color:'#3f5c52'};
+  activity.options.plugins.legend.labels={usePointStyle:true,boxWidth:12,boxHeight:12,padding:16,color:mute};
   activity.update();
   document.getElementById('minutes').setAttribute('aria-pressed',String(useMinutes));
   document.getElementById('breaks').setAttribute('aria-pressed',String(!useMinutes));
@@ -259,13 +367,13 @@ const outcomeAll=[['Completed',r.completed],['Skipped',r.skipped],['Expired',r.e
 const outcomeSlice=outcomeAll.filter(([,n])=>n>0);
 const outcomeEl=document.getElementById('outcomes');
 if(outcomeEl&&outcomeSlice.length){
-  const outcomeColors=['#17382e','#2f5445','#4a6f5a','#6a8762','#8aa37a','#a8bd96','#c7d8b6'];
+  const outcomeColors=['#14261f','#1f392b','#2e5038','#42644c','#5f7a58','#86a077','#b7c9ae'];
   const outcomeTotal=outcomeSlice.reduce((s,[,n])=>s+n,0);
   new Chart(outcomeEl,{
     type:'doughnut',
-    data:{labels:outcomeSlice.map(([l])=>l),datasets:[{data:outcomeSlice.map(([,n])=>n),backgroundColor:outcomeColors.slice(0,outcomeSlice.length),borderWidth:0,hoverOffset:4}]},
+    data:{labels:outcomeSlice.map(([l])=>l),datasets:[{data:outcomeSlice.map(([,n])=>n),backgroundColor:outcomeColors.slice(0,outcomeSlice.length),borderWidth:2,borderColor:paper,hoverOffset:4}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'62%',layout:{padding:8},
-      plugins:{legend:{display:true,position:'right',labels:{boxWidth:12,boxHeight:12,padding:14,color:'#3f5c52'}},
+      plugins:{legend:{display:true,position:'right',labels:{usePointStyle:true,boxWidth:12,boxHeight:12,padding:14,color:mute}},
         tooltip:{...tipBase,callbacks:{title(){return '';},label(ctx){
           const n=ctx.parsed; const pct=outcomeTotal?Math.round(n/outcomeTotal*100):0;
           return (ctx.label||'')+': '+n+' ('+pct+'%)';

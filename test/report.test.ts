@@ -22,7 +22,7 @@ test('empty report is a self-contained HTML file with inline charts and no exter
   assert.match(html,/role="group"/);
   assert.match(html,/scope="col"/);
   assert.match(html,/<caption>/);
-  assert.match(html,/class="progress-narrative"/);
+  assert.match(html,/class="lede"/);
   assert.match(html,/class="narrative"/);
   assert.match(html,/visually-hidden|class="sr-only"/);
   assert.match(html,/class="subtitle"/);
@@ -86,7 +86,7 @@ test('report aggregates exercises, response latency, and sessions', () => {
   assert.match(html,/id="outcomes-table"/);
   assert.match(html,/aria-describedby="outcomes-table"/);
   assert.doesNotMatch(html,/class="outcomes"/);
-  assert.match(html,/class="progress-narrative"/);
+  assert.match(html,/class="lede"/);
   assert.match(html,/id="summary-heading"/);
   assert.match(html,/Across <strong>2 sessions<\/strong>/);
   assert.match(html,/confirmed <strong>2 breaks<\/strong>/);
@@ -98,8 +98,8 @@ test('report aggregates exercises, response latency, and sessions', () => {
   assert.doesNotMatch(html,/class="metrics"|class="session-strip"|class="session-metrics"/);
   const narrativeAt = html.indexOf('class="narrative"');
   const periodAt = html.indexOf('id="period"');
-  const chartsAt = html.indexOf('class="charts"');
-  assert.ok(narrativeAt >= 0 && periodAt > narrativeAt && chartsAt > periodAt);
+  const sectionsAt = html.indexOf('class="section"');
+  assert.ok(narrativeAt >= 0 && periodAt > narrativeAt && sectionsAt > periodAt);
   assert.match(html,/Body area/);
   assert.match(html,/id="daily-table"/);
   assert.match(html,/aria-describedby="daily-table"/);
@@ -115,4 +115,18 @@ test('report aggregates exercises, response latency, and sessions', () => {
   assert.doesNotMatch(html,/chart-data|Body area data table|Daily movement data table|Completion rate data table/);
   assert.equal((html.match(/Daily activity totals for the report period/g) ?? []).length, 1);
   db.close(); rmSync(root,{recursive:true});
+});
+test('chart config uses the identity palette, mono ticks, gradient fill, hover states, and reduced-motion gated animation', () => {
+  const db = new SQLiteAnalytics(':memory:');
+  const report = getReport(db, new Date('2026-10-08T12:00:00Z'));
+  const root = mkdtempSync(path.join(tmpdir(), 'deskercise-report-'));
+  const filename = path.join(root, 'report.html');
+  writeReport(report, filename, false);
+  const html = readFileSync(filename, 'utf8');
+  assert.match(html, /#5f7a58/);       // identity moss
+  assert.match(html, /#14261f/);       // identity ink
+  assert.match(html, /#c5d0c6/);       // identity rule used for chart gridlines
+  assert.match(html, /hoverBackgroundColor/);           // bar hover feedback
+  assert.match(html, /borderRadius:2/);                 // flat corners
+  db.close(); rmSync(root, { recursive: true });
 });
