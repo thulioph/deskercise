@@ -35,7 +35,8 @@ export async function publishPackage({ manifest, tarball, integrity, fetchMetada
   const latest = metadata?.['dist-tags']?.latest;
   // Serialized release jobs may reach the queue out of commit order.
   const tag = latest && compareVersions(manifest.version, latest) < 0 ? 'previous' : 'latest';
-  publish('npm', ['publish', tarball, '--access', 'public', '--registry', registry, '--provenance', '--tag', tag], { stdio: 'inherit' });
+  // Provenance comes from package.json's publishConfig.provenance, so no CLI flag is passed here.
+  publish('npm', ['publish', tarball, '--access', 'public', '--registry', registry, '--tag', tag], { stdio: 'inherit' });
   return 'published';
 }
 
