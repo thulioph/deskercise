@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#E6EBE7" />
-    <title>Deskercise — sixty seconds between the sitting</title>
+    <meta name="theme-color" content="#e6ebe7" />
+    <title>Deskercise — move for a minute, work better for hours</title>
     <meta
       name="description"
-      content="Local-first macOS CLI for short workplace movement breaks. Timed exercises, on-device history, offline HTML report. No accounts or telemetry."
+      content="Deskercise is a local-first macOS CLI for short movement breaks. Every 45 minutes it offers a 60-second stretch you can do at your desk. No accounts, no telemetry, everything stays on your machine."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,239 +20,313 @@
   <body>
     <a class="skip" href="#main">Skip to content</a>
 
-    <header class="chapel">
-      <div class="rail">
-        <nav class="top" aria-label="Primary">
-          <a href="https://github.com/thulioph/deskercise">GitHub</a>
-        </nav>
-        <div class="chapel-copy">
-          <h1 class="brand" translate="no">Deskercise</h1>
-          <p class="line">Sixty seconds between the sitting.</p>
-        </div>
-        <section class="ritual-section" aria-labelledby="ritual-heading">
-          <h2 id="ritual-heading" class="visually-hidden">A break in the terminal</h2>
-          <div class="ritual" id="ritual" translate="no">
-            <pre class="ritual-log" aria-label="Example Deskercise session">waiting 45m …
-
-Break · Gentle neck turns
-  <span class="key">[1]</span> start   <span class="key">[2]</span> skip   <span class="key">[3]</span> snooze
-
-▶ <span class="timer">0:60</span>
-  sit upright · look gently left, then right
-
-Completed?  <span class="key">[y]</span> / <span class="key">[n]</span></pre>
-          </div>
-        </section>
-        <section class="chapel-install prose" aria-labelledby="install-heading">
-          <h2 id="install-heading">Install</h2>
-          <div class="install-panel">
-            <div
-              class="install-tabs"
-              role="tablist"
-              aria-label="Package manager"
-            >
-              <button
-                type="button"
-                class="install-tab"
-                role="tab"
-                id="tab-npm"
-                aria-selected="true"
-                aria-controls="install-cmd-panel"
-                data-cmd="npm install --global @thulioph/deskercise"
-              >
-                npm
-              </button>
-              <button
-                type="button"
-                class="install-tab"
-                role="tab"
-                id="tab-pnpm"
-                aria-selected="false"
-                aria-controls="install-cmd-panel"
-                data-cmd="pnpm add --global @thulioph/deskercise"
-                tabindex="-1"
-              >
-                pnpm
-              </button>
-              <button
-                type="button"
-                class="install-tab"
-                role="tab"
-                id="tab-yarn"
-                aria-selected="false"
-                aria-controls="install-cmd-panel"
-                data-cmd="yarn global add @thulioph/deskercise"
-                tabindex="-1"
-              >
-                yarn
-              </button>
-              <button
-                type="button"
-                class="install-tab"
-                role="tab"
-                id="tab-bun"
-                aria-selected="false"
-                aria-controls="install-cmd-panel"
-                data-cmd="bun add --global @thulioph/deskercise"
-                tabindex="-1"
-              >
-                bun
-              </button>
-            </div>
-            <div
-              class="install"
-              id="install-cmd-panel"
-              role="tabpanel"
-              aria-labelledby="tab-npm"
-            >
-              <code id="install-cmd" translate="no">npm install --global @thulioph/deskercise</code>
-              <button
-                type="button"
-                id="copy-install"
-                aria-label="Copy install command"
-              >
-                Copy
-              </button>
-            </div>
-          </div>
-          <p id="copy-status" class="copy-status" aria-live="polite"></p>
-          <p class="install-note">Requires Node&nbsp;22.13+ on macOS.</p>
-          <p class="install-links">
-            <a href="https://github.com/thulioph/deskercise/releases">Releases</a>
-          </p>
-        </section>
-      </div>
-    </header>
-
     <main id="main">
-      <section class="why-section" aria-labelledby="why-heading">
-        <div class="rail">
-          <div class="prose">
-            <h2 id="why-heading">Why breaks</h2>
-            <p>
-              Long stretches at a desk load the same places over and over — neck,
-              shoulders, hands, back. Short movement breaks interrupt that load
-              before it piles up into the day.
+      <section class="hero">
+        <div class="wrap hero-top">
+          <a
+            class="github-link"
+            href="https://github.com/thulioph/deskercise"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub&nbsp;&#8599;
+          </a>
+        </div>
+        <div class="wrap hero-grid">
+          <div class="hero-left">
+            <span class="eyebrow"><span class="dot"></span> Deskercise &middot; a local-first macOS CLI</span>
+            <h1>Move for a minute. <span class="emph">Work better for hours.</span></h1>
+            <p class="hero-sub">
+              Deskercise nudges you out of your chair once every 45 minutes for a
+              60-second movement break — a gentle set of stretches you can do at
+              your desk, without an app to open, an account to create, or anyone
+              noticing.
             </p>
-            <p>
-              Deskercise’s exercises are shortened adaptations of workplace
-              physiotherapy materials. The sixty seconds are a break window that
-              includes rest — not a stretch held for the whole timer.
+            <div class="hero-cta">
+              <a class="btn" href="#install">Install in one command</a>
+              <span class="hero-note">free &middot; offline &middot; no account</span>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div
+              class="term"
+              id="term"
+              tabindex="0"
+              role="group"
+              aria-label="Interactive Deskercise terminal demo. Click it, then press 1, 2, or 3, then y or n."
+            >
+              <div class="term-bar">
+                <span class="t-dot r"></span>
+                <span class="t-dot y"></span>
+                <span class="t-dot g"></span>
+                <span class="term-title">deskercise — session</span>
+              </div>
+              <div class="term-body" id="term-body">
+                <div class="tl key">$ deskercise start</div>
+                <div class="tl dim">waiting 45m &hellip;</div>
+                <div class="tl hl">Break &middot; Gentle neck turns</div>
+                <div class="tl key">&nbsp;&nbsp;[1] start&nbsp;&nbsp;&nbsp;[2] skip&nbsp;&nbsp;&nbsp;[3] snooze</div>
+                <div class="tl">&#9654; 0:60</div>
+                <div class="tl dim">&nbsp;&nbsp;sit upright &middot; look gently left, then right</div>
+                <div class="tl hl">Completed?&nbsp;&nbsp;[y] / [n]<span class="term-caret"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="benefits">
+        <div class="wrap">
+          <div class="sec-head">
+            <div class="sec-kicker">Why a minute matters</div>
+            <h2>Small breaks, compounding throughout your day.</h2>
+            <p class="sec-sub">
+              You don&rsquo;t need a yoga class or a standing-desk overhaul. You need a
+              dependable, tiny interruption that resets your body before discomfort
+              has a chance to settle in — repeated across the afternoon.
             </p>
-            <ul class="refs">
+          </div>
+          <div class="cards">
+            <div class="card">
+              <div class="card-icon">&#9889;</div>
+              <h3>Energy</h3>
+              <p>
+                A short physical reset interrupts the slow drain of a static
+                afternoon. You come back to the screen awake instead of dragging.
+              </p>
+              <div class="card-stat"><span>comes around</span><b>every 45 min</b></div>
+            </div>
+            <div class="card">
+              <div class="card-icon">&#127919;</div>
+              <h3>Focus</h3>
+              <p>
+                Stepping away for 60 seconds clears the mental fog. You come back
+                with sharper, calmer attention instead of drifting tabs.
+              </p>
+              <div class="card-stat"><span>break window</span><b>60 sec</b></div>
+            </div>
+            <div class="card">
+              <div class="card-icon">&#129496;</div>
+              <h3>Loosen up</h3>
+              <p>
+                Fifteen movements across your neck, shoulders, hands, wrists, arms,
+                back, chest, and legs undo the specific stiffness a keyboard-and-chair
+                day creates.
+              </p>
+              <div class="card-stat"><span>in the catalog</span><b>15</b></div>
+            </div>
+            <div class="card">
+              <div class="card-icon">&#9201;</div>
+              <h3>It&rsquo;s automatic</h3>
+              <p>
+                No app to open and no notifications to configure. The timer runs in
+                your terminal and quietly asks when the next break is due.
+              </p>
+              <div class="card-stat"><span>where it runs</span><b>terminal</b></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="problem">
+        <div class="wrap problem-grid">
+          <div>
+            <div class="sec-kicker">The problem it solves</div>
+            <h2>The desk slump is sneaky. It never announces itself.</h2>
+            <p class="lede">
+              Nobody decides to sit badly for four hours. It just happens — a meeting
+              runs long, a ticket needs finishing, and suddenly the afternoon is gone
+              and your body has been folded into one position the whole time.
+            </p>
+            <ul class="problem-list">
               <li>
-                <a
-                  href="https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/"
-                  rel="noopener noreferrer"
-                >
-                  Newcastle Hospitals NHS — 1&nbsp;minute body check
-                </a>
-                <span class="ref-note">Quick seated checks for desk workers.</span>
+                <span class="mark">&#10003;</span>
+                <span>Your neck eases forward toward the screen and the muscles at the back of your skull stay switched-on for hours.</span>
               </li>
               <li>
-                <a
-                  href="https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html"
-                  rel="noopener noreferrer"
-                >
-                  CCOHS — Stretching at the workstation
-                </a>
-                <span class="ref-note">Workstation stretches while you stay at your seat.</span>
+                <span class="mark">&#10003;</span>
+                <span>Your shoulders creep up toward your ears during focused work, turning mild tension into an actual ache by evening.</span>
               </li>
               <li>
-                <a
-                  href="https://www.merseycare.nhs.uk/msk-work/desk-based-jobs"
-                  rel="noopener noreferrer"
-                >
-                  Mersey Care NHS — Desk-based jobs
-                </a>
-                <span class="ref-note">Movement advice for people in desk-based roles.</span>
+                <span class="mark">&#10003;</span>
+                <span>Your lower back holds the same seated curve long after it&rsquo;s stopped feeling comfortable, because you were too deep in flow to notice.</span>
+              </li>
+              <li>
+                <span class="mark">&#10003;</span>
+                <span>Your wrists and hands stay locked in tiny repetitive motions that never get a counter-motion to balance them.</span>
               </li>
             </ul>
-            <p class="why-note">
-              The 45-minute interval and 60-second window are product choices, not
-              recommendations from these organizations.
-            </p>
           </div>
-        </div>
-      </section>
-
-      <section class="commands-section" aria-labelledby="commands-heading">
-        <div class="rail">
-          <div class="prose">
-            <h2 id="commands-heading">Commands</h2>
-            <p class="commands-lead">Two things you run after install.</p>
-          </div>
-          <div class="command-list">
-            <div class="command-block">
-              <div class="install" role="group" aria-label="deskercise start">
-                <code id="cmd-start" translate="no">deskercise start</code>
-                <button
-                  type="button"
-                  class="copy-cmd"
-                  data-copy-target="cmd-start"
-                  aria-label="Copy start command"
-                >
-                  Copy
-                </button>
-              </div>
-              <p class="command-note">
-                Keep the terminal open. Breaks arrive on your interval; confirm
-                when the minute ends.
-              </p>
-            </div>
-            <div class="command-block">
-              <div class="install" role="group" aria-label="deskercise report">
-                <code id="cmd-report" translate="no">deskercise report</code>
-                <button
-                  type="button"
-                  class="copy-cmd"
-                  data-copy-target="cmd-report"
-                  aria-label="Copy report command"
-                >
-                  Copy
-                </button>
-              </div>
-              <p class="command-note">
-                Opens this week’s offline HTML from
-                <code translate="no">~/.deskercise</code>.
-              </p>
-              <p class="command-links">
-                <a href="./demo-report.html">Sample report</a>
-              </p>
-            </div>
-          </div>
-          <p id="copy-status-commands" class="copy-status" aria-live="polite"></p>
-        </div>
-      </section>
-
-      <section class="privacy-section" aria-labelledby="privacy-heading">
-        <div class="rail">
-          <div class="prose">
-            <h2 id="privacy-heading">On your machine</h2>
+          <div class="problem-aside">
+            <h3>You didn&rsquo;t even notice three hours passed.</h3>
             <p>
-              Local history and the HTML report stay under
-              <code translate="no">~/.deskercise</code>. No accounts, no telemetry,
-              no data shared.
+              The fix isn&rsquo;t willpower — it&rsquo;s a cue. Deskercise decides for you, then
+              makes the next step so small there&rsquo;s no excuse to skip it.
             </p>
-            <p>
-              No network requests while you run breaks or open the report —
-              install only talks to npm.
-            </p>
+            <div class="stat-row"><span>default interval</span><b>45 min</b></div>
+            <div class="stat-row"><span>break window</span><b>60 sec</b></div>
+            <div class="stat-row"><span>rest built in</span><b>yes</b></div>
           </div>
         </div>
       </section>
-    </main>
 
-    <footer class="close">
-      <div class="rail">
-        <div class="prose">
-          <p class="disclaimer">
-            Deskercise is a habit log, not medical advice. Stop any movement that
-            causes pain.
+      <section class="install" id="install">
+        <div class="wrap">
+          <div class="sec-kicker">Get started</div>
+          <h2>One line, then let it run.</h2>
+          <p class="sub">
+            Install globally with your package manager of choice, then start a
+            session. Deskercise lives in your terminal and keeps working quietly in
+            the background of your day.
+          </p>
+          <div class="tabs" role="tablist" aria-label="Package manager">
+            <button class="tab active" type="button" role="tab" aria-selected="true" data-pm="npm">npm</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-pm="pnpm">pnpm</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-pm="yarn">yarn</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-pm="bun">bun</button>
+          </div>
+          <div class="cmd">
+            <span class="prompt">$</span>
+            <span class="code" id="install-cmd">npm install --global @thulioph/deskercise</span>
+            <button class="copy-btn" id="copy-btn" type="button">copy</button>
+          </div>
+          <div class="install-meta">
+            <span>Requires Node 22.13+</span>
+            <span>macOS only</span>
+            <span>Runs entirely offline</span>
+          </div>
+          <p class="install-links">
+            Prefer a manual install? Grab a tarball from
+            <a href="https://github.com/thulioph/deskercise/releases" target="_blank" rel="noopener noreferrer">GitHub Releases</a>.
           </p>
         </div>
-      </div>
-    </footer>
+      </section>
+
+      <section class="commands">
+        <div class="wrap">
+          <div class="sec-head">
+            <div class="sec-kicker">Two commands</div>
+            <h2>Start a break rhythm. Check how you did.</h2>
+          </div>
+          <div class="cmd-cards">
+            <div class="cmd-card">
+              <h3>Start a session</h3>
+              <p class="desc">
+                Begins the 45-minute timer and walks you through each break when it
+                arrives. Skip or snooze if you&rsquo;re mid-meeting — it won&rsquo;t guilt you,
+                it&rsquo;ll just come back.
+              </p>
+              <span class="cmd-inline">deskercise start</span>
+            </div>
+            <div class="cmd-card">
+              <h3>See your week</h3>
+              <p class="desc">
+                Opens a local HTML report straight from your home directory — a log of
+                completed breaks, skips, and confirmed minutes. It never leaves your
+                machine.
+              </p>
+              <span class="cmd-inline">deskercise report</span>
+              <a class="sample-link" href="./demo-report.html">Preview a sample report &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="references">
+        <div class="wrap">
+          <div class="sec-head">
+            <div class="sec-kicker">The studies behind it</div>
+            <h2>Movement breaks aren&rsquo;t a new idea — they&rsquo;re just hard to remember.</h2>
+          </div>
+          <div class="ref-list">
+            <div class="ref">
+              <span class="tag">Reference</span>
+              <h3>
+                <a href="https://www.newcastle-hospitals.nhs.uk/services/newcastle-occupational-health-service/information-for-staff/physiotherapy/self-help-leaflets/1-minute-body-check/" target="_blank" rel="noopener noreferrer">Newcastle Hospitals NHS</a>
+              </h3>
+              <p>
+                The &ldquo;1 minute body check&rdquo; — a plain reminder that brief, regular
+                check-ins with your posture and movement add up over a shift.
+              </p>
+            </div>
+            <div class="ref">
+              <span class="tag">Reference</span>
+              <h3>
+                <a href="https://www.ccohs.ca/oshanswers/ergonomics/office/stretching.html" target="_blank" rel="noopener noreferrer">CCOHS</a>
+              </h3>
+              <p>
+                Stretching at the workstation — guidance on small, desk-friendly
+                stretches that target the muscles desk work overworks most.
+              </p>
+            </div>
+            <div class="ref">
+              <span class="tag">Reference</span>
+              <h3>
+                <a href="https://www.merseycare.nhs.uk/msk-work/desk-based-jobs" target="_blank" rel="noopener noreferrer">Mersey Care NHS</a>
+              </h3>
+              <p>
+                Desk-based jobs — practical advice on staying comfortable and mobile
+                during long stretches of seated computer work.
+              </p>
+            </div>
+          </div>
+          <p class="ref-note">
+            The 45-minute interval and 60-second break window are Deskercise&rsquo;s own
+            product choices — not recommendations from these organizations. Their work
+            simply informed the idea that regular micro-breaks are worth doing.
+          </p>
+        </div>
+      </section>
+
+      <section class="privacy">
+        <div class="wrap privacy-grid">
+          <div>
+            <div class="sec-kicker">Your data</div>
+            <h2>Local-first. Private by design.</h2>
+            <p>
+              Deskercise works only on your machine. There are no accounts to create,
+              no telemetry to opt out of, and no network requests while it runs. Your
+              break history belongs to you.
+            </p>
+            <p>
+              Everything it needs lives in a single hidden folder in your home
+              directory. Delete that folder and Deskercise is gone, clean and complete.
+            </p>
+            <div class="privacy-badges">
+              <span class="p-badge">no account</span>
+              <span class="p-badge">no telemetry</span>
+              <span class="p-badge">no network calls</span>
+              <span class="p-badge">offline report</span>
+            </div>
+          </div>
+          <div class="file-list">
+            <span class="dir">~/.deskercise/</span>
+            <span class="f">config.json — your settings</span>
+            <span class="f">analytics.db — your local log</span>
+            <span class="f">report.html — offline dashboard</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="disclaimer">
+        <div class="wrap">
+          <div class="disclaimer-box">
+            <span class="i">&#8505;</span>
+            <span>
+              <strong>Heads up:</strong> Deskercise is a habit log, not medical advice.
+              Stop any movement that causes pain.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <div class="wrap">
+          <span>Deskercise — short movement breaks for desk workers.</span>
+          <span>Local-first macOS CLI</span>
+        </div>
+      </footer>
+    </main>
 
     <script src="./site.js" defer></script>
   </body>
